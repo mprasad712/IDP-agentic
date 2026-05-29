@@ -1,1 +1,9 @@
 README.md
+
+.venv/
+__pycache__/
+*.pyc
+*.pyo   
+IDP_Solution_Architecture.docx
+UDIP_Architecture_TechStack (1).png
+Universal_Document_Intelligence_Platform.docx
