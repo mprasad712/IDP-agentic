@@ -1,19 +1,41 @@
 from contextlib import asynccontextmanager
 
+import asyncpg
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.auth import router as auth_router
 from app.core.config import settings
-from app.core.security import hash_password
-from app.models.user import USERS_DB
+
+
+async def _ensure_database_exists():
+    """Create the 'idp' database if it doesn't exist yet."""
+    url = settings.DATABASE_URL.replace("postgresql+asyncpg://", "")
+    userinfo, hostinfo = url.split("@")
+    db_user, db_pass = userinfo.split(":", 1)
+    host_port, db_name = hostinfo.rsplit("/", 1)
+    host, port = (host_port.split(":") + ["5432"])[:2]
+
+    try:
+        conn = await asyncpg.connect(
+            host=host, port=int(port),
+            user=db_user, password=db_pass,
+            database="postgres",
+        )
+        exists = await conn.fetchval(
+            "SELECT 1 FROM pg_database WHERE datname = $1", db_name
+        )
+        if not exists:
+            await conn.execute(f'CREATE DATABASE "{db_name}"')
+            print(f"[IDP] Database '{db_name}' created.")
+        await conn.close()
+    except Exception as e:
+        print(f"[IDP] Warning: could not auto-create database: {e}")
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Seed demo passwords on startup
-    USERS_DB["admin@idp.local"]["hashed_password"] = hash_password("Admin@123")
-    USERS_DB["reviewer@idp.local"]["hashed_password"] = hash_password("Review@123")
+    await _ensure_database_exists()
     yield
 
 

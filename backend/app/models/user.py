@@ -1,5 +1,4 @@
-from pydantic import BaseModel, EmailStr
-from typing import Optional
+from pydantic import BaseModel, Field
 from enum import Enum
 
 
@@ -12,37 +11,15 @@ class UserRole(str, Enum):
     vendor_user = "vendor_user"
 
 
-# In-memory user store (replace with DB in production)
-USERS_DB: dict[str, dict] = {
-    "admin@idp.local": {
-        "user_id": "usr_001",
-        "email": "admin@idp.local",
-        "display_name": "Admin User",
-        "role": UserRole.administrator,
-        "hashed_password": "",  # set on startup
-        "is_active": True,
-    },
-    "reviewer@idp.local": {
-        "user_id": "usr_002",
-        "email": "reviewer@idp.local",
-        "display_name": "Reviewer User",
-        "role": UserRole.reviewer,
-        "hashed_password": "",
-        "is_active": True,
-    },
-}
-
-
 class LoginRequest(BaseModel):
     email: str
     password: str
 
 
-class TokenResponse(BaseModel):
-    access_token: str
-    token_type: str = "bearer"
-    expires_in: int
-    user: "UserOut"
+class RegisterRequest(BaseModel):
+    email: str = Field(max_length=254)
+    display_name: str = Field(min_length=2, max_length=80, strip_whitespace=True)
+    password: str = Field(min_length=8, max_length=128)
 
 
 class UserOut(BaseModel):
@@ -53,4 +30,8 @@ class UserOut(BaseModel):
     is_active: bool
 
 
-TokenResponse.model_rebuild()
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    expires_in: int
+    user: UserOut
