@@ -1,0 +1,614 @@
+{% extends 'views/shared/base.html' %}
+{% load static %}
+{% block body_block %}
+
+<style>
+    .card-body {
+        padding: 0.91rem !important;
+    }
+    .hide{ display: none;}
+</style>
+<link rel="stylesheet" href="{% static "assets/vendors/toastr/toastr.min.css" %}">
+<link rel="stylesheet" href="{% static "assets/vendors/charts/c3charts/c3.css" %}">
+
+<span class="hide" id="vspredicted_count">{{ processed_count}} </span>
+<span class="hide" id="vsaudited_count">{{ audited_count }}   </span> 
+<style>
+.icon-box-lg {
+    height: 45px;
+    width: 45px;
+}
+
+.icon-circle-medium {
+    line-height: 1;
+    padding: 10px 2px;
+    text-align: center;
+    font-size: 12px;
+    display: inline-block;
+    border-radius: 100%;
+}
+</style>
+<!-- 
+<span class="hide" id="p_vs_au_predicted_count">{{process_vs_audited_graph.0.predicted_count}}</span>
+<span class="hide" id="p_vs_au_audited_count">{{process_vs_audited_graph.0.audited_count}}</span>
+<span class="hide" id="p_vs_au_date_string">{{process_vs_audited_graph.0.date_string}}</span>
+<span class="hide" id="accuracy_predicted_count">{{accuracy_dict.0.predicted_count}}</span>
+<span class="hide" id="accuracy_audited_count">{{accuracy_dict.0.audited_count}}</span>
+<span class="hide" id="accuracy_date_string">{{accuracy_dict.0.date_string}}</span>   -->
+
+<!-- page content -->
+             <!-- top tiles -->
+            <div class="row" style="display: inline-block;">
+                <div class="tile_count">
+                  <div class="col-md-2 col-sm-4  tile_stats_count">
+                    <span class="count_top"><i class="fa fa-users"></i> Total Users</span>
+                    <div class="count">51</div>
+                    <span class="count_bottom"><i class="green">4% </i> From last Week</span>
+                  </div>
+                  <div class="col-md-2 col-sm-4  tile_stats_count">
+                    <span class="count_top"><i class="fa fa-file-text"></i> Contract received</span>
+                    <div class="count">4,583</div>
+                    <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>17% </i> From last Week</span>
+                  </div>
+                  <div class="col-md-2 col-sm-4  tile_stats_count">
+                    <span class="count_top"><i class="fa fa-cogs"></i> Total Processed</span>
+                    <div class="count pwc_yellow">4,497</div>
+                    <span class="count_bottom"><i class="pwc_yellow"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>
+                  </div>
+                  <div class="col-md-2 col-sm-4  tile_stats_count">
+                    <span class="count_top"><i class="fa fa-eye"></i> Total Reviewed</span>
+                    <div class="count green">1,710</div>
+                    <span class="count_bottom"><i class="green"><i class="fa fa-sort-desc"></i>12% </i> From last Week</span>
+                  </div>
+                  <div class="col-md-2 col-sm-4  tile_stats_count">
+                    <span class="count_top"><i class="fa fa-user-plus"></i> Total STP</span>
+                    <div class="count pwc_yellow">535</div>
+                    <span class="count_bottom"><i class="pwc_yellow"><i class="fa fa-sort-asc"></i>12% </i> From last Week</span>
+                  </div>
+                  <div class="col-md-2 col-sm-4  tile_stats_count">
+                    <span class="count_top"><i class="fa fa-globe"></i> Total Translated</span>
+                    <div class="count green">678</div>
+                    <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>
+                  </div>
+                </div>
+              </div>
+              <!-- /top tiles -->
+   
+<div class="card">
+        <div class="card-body">
+
+<div class="row">
+
+  <div class="col-md-7 x_title">
+    <div class="col-md-12">
+      <h5 class="card-header">Transaction Summary<small> Weekly progress</small></h3>
+    </div>
+    <div class="col-md-12 col-sm-12 ">
+      <div id="chart_plot_01" class="demo-placeholder"></div>
+    </div>
+  </div>
+  <div class="col-md-5 x_title">
+      <!-- ============================================================== -->
+      <!-- sales traffice source  -->
+      <!-- ============================================================== -->
+      <div class="card">
+          <h5 class="card-header">Contract Expiry</h5>
+          <div class="card-body p-0">
+              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                 <!-- <div id="c3chart_pie"></div> -->
+                 <img src="{% static "assets/build/images/contract.png" %}" width="450px;" height="250px">
+              </div>
+          </div>
+
+      
+  </div>
+  </div>
+
+</div>
+
+<div class="row hidep">
+
+    <div class="col-xl-6 col-lg-12 col-md-6 col-sm-12 col-12">
+        <div class="card">
+            <h5 class="card-header"> <i class="fas fa-eye"></i>  Action Items</h5>
+            <div class="card-body p-0" style="padding: 0.1 rem !important;">
+                <div class="table-responsive">
+                    <table class="table m-0">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Item</th>
+                                <th>Status</th>
+                                <th>Completed</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><a href="#">1</a></td>
+                                <td>Profile Update</td>
+                                <td><span class="badge badge-{{ config_list.profile_dict.profile_color }}">
+
+                                        {% if config_list.profile_dict.profile_percent == 100 %} Complete {% else %}
+                                        Pending
+                                        {% endif %} </span></td>
+                                <td>
+                                    <div class="progress progress-xs">
+                                        <div class="progress-bar progress-bar-{{ config_list.profile_dict.profile_color }} bg-{{ config_list.profile_dict.profile_color }} progress-bar-striped"
+                                            role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"
+                                            style="width: {{ config_list.profile_dict.profile_percent }}%">
+                                            <span class="sr-only">{{ config_list.profile_dict.profile_percent }}%
+                                                Complete </span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="#">2</a></td>
+                                <td>Profile Pic Upload</td>
+                                <td><span class="badge badge-{{ config_list.profile_pic.profile_pic_color }}">
+                                        {% if config_list.profile_pic.profile_pic_percent == 100 %} Complete {% else %}
+                                        Pending
+                                        {% endif %}</span></td>
+                                <td>
+                                    <div class="progress progress-xs">
+                                        <div class="progress-bar progress-bar-{{ config_list.profile_pic.profile_pic_color }} bg-{{ config_list.profile_pic.profile_pic_color }} progress-bar-striped"
+                                            role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"
+                                            style="width: {{ config_list.profile_pic.profile_pic_percent }}%">
+                                            <span class="sr-only">{{ config_list.profile_pic.profile_pic_percent }}%
+                                                Complete </span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="#">3</a></td>
+                                <td> <i class="fas fa-chart-bar"></i>  Define Configuration</td>
+                                <td><span
+                                        class="badge badge-{{ config_list.config_dict.file_config_color }}">
+                                        {% if config_list.config_dict.file_config_percent == 100 %}
+                                        Complete {% else %} Pending {% endif %}</span></td>
+                                <td>
+                                    <div class="progress progress-xs">
+                                        <div class="progress-bar progress-bar-{{ config_list.config_dict.file_config_color }} bg-{{ config_list.config_dict.file_config_color }} progress-bar-striped"
+                                            role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"
+                                            style="width: {{ config_list.config_dict.file_config_percent }}%">
+                                            <span class="sr-only">{{ config_list.config_dict.file_config_percent }}%
+                                                Complete
+                                                (warning)</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="#">4</a></td>
+                                <td>Data Upload</td>
+                                <td><span
+                                        class="badge badge-{{ config_list.file_uploaded.file_uploaded_color }}">{% if config_list.file_uploaded.file_uploaded_percent == 100 %}
+                                        Complete {% else %} Pending {% endif %}</span></td>
+                                <td>
+                                    <div class="progress progress-xs">
+                                        <div class="progress-bar progress-bar-{{ config_list.file_uploaded.file_uploaded_color }} bg-{{ config_list.file_uploaded.file_uploaded_color }} progress-bar-striped"
+                                            role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"
+                                            style="width: {{ config_list.file_uploaded.file_uploaded_percent }}%">
+                                            <span class="sr-only">{{ config_list.file_uploaded.file_uploaded_percent }}%
+                                                Complete
+                                                (warning)</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td><a href="#">5</a></td>
+                                <td>Processed by IDP</td>
+                                <td><span
+                                        class="badge badge-{{ config_list.predictIdp.predictedCount_color }}">{% if config_list.predictIdp.predictedCount_percent == 100 %}
+                                        Complete {% else %} Pending {% endif %}</span></td>
+                                <td>
+                                    <div class="progress progress-xs">
+                                        <div class="progress-bar progress-bar-{{ config_list.predictIdp.predictedCount_color }} bg-{{ config_list.predictIdp.predictedCount_color }} progress-bar-striped"
+                                            role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"
+                                            style="width: {{ config_list.predictIdp.predictedCount_percent }}%">
+                                            <span
+                                                class="sr-only">{{ config_list.predictIdp.predictedCount_percent }}%
+                                                Complete </span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="#">6</a></td>
+                                <td>Audited by user</td>
+                                <td><span
+                                        class="badge badge-{{ config_list.auditedData.auditedCount_color }}">{% if config_list.auditedData.auditedCount_percent == 100 %}
+                                        Complete {% else %} Pending {% endif %}</span></td>
+                                <td>
+                                    <div class="progress progress-xs">
+                                        <div class="progress-bar progress-bar-{{ config_list.auditedData.auditedCount_color }} bg-{{ config_list.auditedData.auditedCount_color }} progress-bar-striped"
+                                            role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"
+                                            style="width: {{ config_list.auditedData.auditedCount_percent }}%">
+                                            <span class="sr-only">{{ config_list.auditedData.auditedCount_percent}}%
+                                                Complete</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+        <!-- ============================================================== -->
+        <!-- social source  -->
+        <!-- ============================================================== -->
+        <div class="card">
+            <h5 class="card-header">Configuration Created </h5>
+            <div class="card-body p-0" style="padding: 0.1 rem !important;">
+                    <div class="table-responsive" style="overflow-y:scroll; max-height:294px;">
+                        <table class="table m-0">
+                            <thead>
+                                <tr>
+                                    
+                                    <th>Configuration Name</th>
+                                    <th>Configuration Status</th> 
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                {% for fc in field_config_list  %}
+                                
+				 <tr>                                    
+                                    <td>  
+						{{ fc.config_name }}
+
+					  </td>
+                                    <td>
+                                    {% if fc.is_active == 1 %}
+                                        <p style="color:green">Active</p>
+                                       {% endif %}
+                                    </td>
+                                     
+                                </tr>
+				 
+                                {% endfor %}
+                                
+                                    
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+        </div>
+        <!-- ============================================================== -->
+        <!-- end social source  -->
+        <!-- ============================================================== -->
+    </div>
+    
+
+</div>
+
+</div>
+
+
+
+
+<!--  Take a tour popup  block -->
+
+
+<div class="modal fade show" id="modal-success" aria-modal="true" style="padding-right: 16px; display:none;">
+  <div class="modal-dialog">
+    <div class="modal-content bg-default" style="height:360px; width: 500px;text-align: center;background-color: #f2eeeef2">
+      <div class="modal-header">
+        <h4 class="modal-title">Take a Tour</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" style="font-size: 20px;" onclick="skip_takeatour()">Skip</span></button>
+      </div>
+      <div class="modal-body">
+        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+                <div style="text-align: center;font-size: 55px;">
+                  <i class="fas fa-user text-info"></i>
+                </div>
+                <div style="text-align: center;">
+
+                  <h2>Profile update</h2>
+                  <span class="badge badge-warning navbar-badge"
+                    style="font-size: 18px;font-weight: 300;padding: 2px 4px;position: absolute;right: 5px;top: 90px;right: 374px;padding: 6px;right: 385px;">Step
+                    1</span>
+                </div>
+                <p class="lead mb-0">
+                  Let's start by updating your profile. You may want to upload profile pic and organization details.
+                </p>
+              </div>
+            </div>
+
+            <div class="carousel-item">
+              <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+                <div style="text-align: center;font-size: 55px;">
+                  <i class="fas fa-cog text-info"></i>
+                </div>
+                <div style="text-align: center;">
+                  <h2>Define Configuration</h2>
+                  <span class="badge badge-warning navbar-badge"
+                    style="font-size: 18px;font-weight: 300;padding: 2px 4px;position: absolute;right: 5px;top: 90px;right: 374px;padding: 6px;right: 385px;">Step
+                    2</span>
+                </div>
+                <p class="lead mb-0">
+                  Define your custom Configuration to extract data. You can define multiple Configurations.
+                </p>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+                <div style="text-align: center;font-size: 55px;">
+                  <i class="fas fa-upload text-info"></i>
+                </div>
+                <div style="text-align: center;">
+                  <h2>Upload</h2>
+                  <span class="badge badge-warning navbar-badge"
+                    style="font-size: 18px;font-weight: 300;padding: 2px 4px;position: absolute;right: 5px;top: 90px;right: 374px;padding: 6px;right: 385px;">Step
+                    3</span>
+                </div>
+                <p class="lead mb-0">You may upload single or multiple files.</p>
+              </div>
+            </div>
+
+            <div class="carousel-item">
+              <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+                <div style="text-align: center;font-size: 55px;">
+                  <i class="fas fa-cog text-info"></i>
+                </div>
+                <div style="text-align: center;">
+                  <h2>Extract </h2>
+                  <span class="badge badge-warning navbar-badge"
+                    style="font-size: 18px;font-weight: 300;padding: 2px 4px;position: absolute;right: 5px;top: 90px;right: 374px;padding: 6px;right: 385px;">Step
+                    4</span>
+                </div>
+                <p class="lead mb-0">Let IDP process on your files</p>
+              </div>
+            </div>
+
+            <div class="carousel-item">
+              <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+                <div style="text-align: center;font-size:55px;">
+                  <i class="fas fa-check text-info"></i>
+                </div>
+                <div style="text-align: center;">
+                  <h2>Validate</h2>
+                  <span class="badge badge-warning navbar-badge"
+                    style="font-size: 18px;font-weight: 300;padding: 2px 4px;position: absolute;right: 5px;top: 90px;right: 374px;padding: 6px;right: 385px;">Step
+                    5</span>
+                </div>
+                <p class="lead mb-0">
+                  Validate extracted data.
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between bg-info">
+        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev"  style="position:relative;display:block;">
+          <span aria-hidden="true">Previous</span>
+          <span class="sr-only text-info">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next"  style="position:relative">
+          <span class="" aria-hidden="true">Next</span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+
+  <script src="{% static "assets/vendors/charts/c3charts/c3.min.js" %}"></script>
+  <script src="{% static "assets/vendors/charts/c3charts/d3-5.4.0.min.js" %}"></script>
+  
+<script>
+    function get_string_array(input) {
+    result = []
+    str_array = input.split(",")
+    for (loop_start = 0; loop_start < str_array.length; loop_start++) {
+      result.push(str_array[loop_start])
+    }
+
+    return result
+
+  }
+
+
+
+    var dateList =  get_string_array($("#accuracy_date_string").text())
+    var predata = get_string_array($("#accuracy_audited_count").text())
+    var postdata = get_string_array($("#accuracy_predicted_count").text())
+
+
+for(var i=0; i<45;i++){
+
+}
+
+
+    if ($('#morris_bar').length) {
+        
+           Morris.Bar({
+               element: 'morris_bar',
+               data: [
+               
+               {% for info in process_datewise %}
+                   { x: '{{ info.datemonth }}', y: {{ info.total_count }} },
+                 {%  endfor  %} 
+                   
+               ],
+               xkey: 'x',
+               ykeys: ['y'],
+               labels: ['Y'],
+                  barColors: ['#fa8602'],
+                    resize: true,
+                       gridTextSize: '14px'
+
+           });
+       } 
+
+
+       if ($('#morris_bar_audit').length) {
+        
+        Morris.Bar({
+            element: 'morris_bar_audit',
+            data: [
+               {% for info in audit_datewise %}
+                   { x: '{{ info.datemonth }}', y: {{ info.total_count }} },
+                 {%  endfor  %} 
+                 
+            ],
+            xkey: 'x',
+            ykeys: ['y'],
+            labels: ['Y'],
+               barColors: ['#8FBC8F'],
+                 resize: true,
+                    gridTextSize: '14px'
+
+        });
+    } 
+
+
+   if ($('#c3chart_pie').length) {
+     var chart = c3.generate({
+       bindto: "#c3chart_pie",
+       data: {
+         columns: [
+           ['Processed', $('#vspredicted_count').text()],
+           ['Reviewed', $('#vsaudited_count').text()]
+         ],
+         type: 'pie',
+
+         colors: {
+           data1: '#fa8602',
+           data2: '#1ABB9C'
+
+
+         }
+       },
+       pie: {
+         label: {
+           format: function (value, ratio, id) {
+             return d3.format('')(value);
+           }
+         }
+       }
+     });
+   }
+  
+ </script> 
+
+<script>
+
+
+function set_data(result_output) {
+
+      if(result_output.dashboard_data.file_upload_count==''){
+	$("#file_upload_count").html("0");    
+	}else{
+	    $("#file_upload_count").html(result_output.dashboard_data.file_upload_count)
+	}
+	if(result_output.dashboard_data.processed_count==''){
+	$("#processed_count").html("0");    
+	}else{
+	    $("#processed_count").html(result_output.dashboard_data.processed_count)
+	}
+	if(result_output.dashboard_data.audited_count==''){
+	$("#audited_count").html("0");    
+	}else{
+	    $("#audited_count").html(result_output.dashboard_data.audited_count)
+	 
+	}
+	if(result_output.dashboard_data.digitized_count==''){
+	$("#digitized_count").html("0");    
+	}else{
+	    $("#digitized_count").html(result_output.dashboard_data.digitized_count)
+	}
+	if(result_output.dashboard_data.classifire_count==''){
+	$("#classifire_count").html("0");    
+	}else{
+	    $("#classifire_count").html(result_output.dashboard_data.classifire_count)
+	}
+	$("#last_login").html(result_output.dashboard_data.last_login)
+	$("#last_process").html(result_output.dashboard_data.last_process)
+        $("#failed_count").html(result_output.dashboard_data.failed_by_idp_count)	
+      var master_stats = JSON.parse(result_output.dashboard_data.master_stats)
+	/* console.log(master_stats)
+      $("#sys_uploaded").html(master_stats.system_uploaded + result_output.dashboard_data.file_upload_count)
+      $("#sys_processed").html(master_stats.system_processed + result_output.dashboard_data.processed_count)
+      $("#sys_audited").html(master_stats.system_audited + result_output.dashboard_data.audited_count)
+      $("#sys_failed").html(master_stats.system_failed) */
+      
+
+     /*  set_notification(result_output)
+      set_sidebar_items(result_output)*/
+    }
+
+
+function load_stats() {
+    field_info = {}
+     
+    $.ajax({
+      url: $('#SITEROOTURL').val() + '/dashboard_stats/',
+
+      headers: { "X-CSRFToken": '{{ csrf_token }}', 'Content-Type': undefined },
+      type: "POST",
+      crossDomain: true,
+      dataType: "json",
+      data: { field_info },
+      success: function (result_output) {
+          console.log(result_output)
+        set_data(result_output)
+         
+      },
+      error: function (error) {
+       
+        console.log(error);
+        
+      }
+    });
+  }
+
+  $( document ).ready(function() {
+    load_stats();
+    });
+    
+    
+    
+   function skip_takeatour(){
+        field_info = {}
+        field_info['atour']= '0'
+        field_info = JSON.stringify(field_info)
+        
+      $.ajax({
+              url: $('#SITEROOTURL').val() + '/takeatour/',
+
+              headers: { "X-CSRFToken": '{{ csrf_token }}', 'Content-Type': undefined },
+              type: "POST",
+              crossDomain: true,
+              dataType: "json",
+              data: { field_info },
+              success: function (result_output) {
+                  toastr.success(result_output.message)
+                  
+              },
+              error: function (error) {
+               
+                console.log(error);
+                
+              }
+        });
+    }
+</script>
+{% endblock %}

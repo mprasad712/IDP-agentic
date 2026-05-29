@@ -1,0 +1,126 @@
+{% extends 'views/shared/base.html' %}
+{% load static %}
+{% block body_block %}
+
+<input type="hidden" id="selected_config" value="1">
+<div class="">
+    <div class="page-title">
+      <div class="title_left">
+        <h3 style="color: black;font-size: 1.5rem;margin-top:1%;">Create STP Rules</h3>
+      </div>
+    </div>
+
+    <div class="clearfix"></div>
+    <div class="row">
+      <div class="col-md-12 col-sm-12  ">
+        <div class="x_panel">
+          <div class="x_title" style="border-bottom: 0px;">
+              <div class="col-md-3 col-sm-3  form-group has-feedback">
+               <Input type="text" value="" name="" id="stpname" class="form-control has-feedback-left"  placeholder="Enter rule name" >
+                <span class="glyphicon glyphicon-plus form-control-feedback left showp" aria-hidden="true"></span>
+              </div>
+              <div class="col-md-3 col-sm-3  form-group has-feedback">
+                 <button id="nextbtn" class="btn btn-pwc" data-toggle="modal" data-target="#nextpage" disabled >Next</button>
+               </div>
+             
+           
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="x_content" >  
+          </div>       
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="nextpage" class="modal fade" role="dialog">
+    <div class="modal-dialog" style="max-width:800px;">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header"> 
+          <h4 class="modal-title" id="popstp"></h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="col-md-12 col-sm-12  ">
+            <div class="x_panel">
+              <div class="x_title" style="border-bottom: 0px;">
+                  <div class="col-md-12 col-sm-12  form-group">
+                    <select class="form-control has-feedback-left" id="config_name" onchange="set_config()">
+                      <option value="0">Select Configuration</option>
+                      {% for info in config_list %}
+                      <option value="{{info.config_uuid}}">{{info.config_name}}
+                      </option>
+                      {% endfor %}
+                    </select>
+                    <span class="fa fa-cogs form-control-feedback left showp" aria-hidden="true"></span>
+                  </div>
+                  <div class="col-md-12 col-sm-12  form-group x_content" style="display:none;" >
+                    <div class="row">
+                      <div class="col-md-6 col-sm-6  form-group">
+                        <select class="form-control has-feedback-left">
+                          <option value="0">Supplier Rules</option>
+                          <option value="">By Name</option>
+                          <option value="">By Supplier Nubmer</option>
+                          <option value="">By Name & Number</option>
+                        </select>
+                        <span class="glyphicon glyphicon-tasks form-control-feedback left showp" aria-hidden="true"></span>
+                      </div>
+                     
+                      <div class="col-md-6 col-sm-6  form-group">
+                        <select class="form-control has-feedback-left" id="" >
+                          <option value="0">Confidence Score</option>
+                          <option value="1">80-85 %</option>
+                          <option value="1">85-90 %</option>
+                          <option value="1">90-95 %</option>
+                          <option value="1">95-100 %</option>
+                        </select>
+                        <span class="glyphicon glyphicon-random form-control-feedback left showp" aria-hidden="true"></span>
+
+                      </div>
+                  </div>
+                 
+                </div>
+              
+              </div>
+      
+            </div>
+           
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-pwc public" style="display:none" >Publish</button>
+        </div>
+      </div>
+  
+    </div>
+  </div>
+
+
+  <script>
+
+function set_config(){
+  if ($("#config_name").val() != "0") {
+        item = $("#config_name").val();
+        $("#config_id").val(item);
+        $(".x_content").show()
+        $(".public").show()
+    }else{
+      $(".x_content").hide()
+      $(".public").hide()
+    }
+}
+
+
+$("#stpname").mouseout(function(event){ 
+  var name = $("#stpname").val().toUpperCase()
+    $("#popstp").text(name)
+  const button = document.getElementById("nextbtn");
+    if (name === "") {  
+        button.disabled = true ; 
+    } else {
+        button.disabled = false; 
+    }
+})
+  </script>
+{% endblock %}

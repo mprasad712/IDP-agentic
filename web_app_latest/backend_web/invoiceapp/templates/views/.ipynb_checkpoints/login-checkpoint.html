@@ -1,0 +1,234 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<meta charset="UTF-8">
+<title>::: Digital Workmate :::</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- <link rel="stylesheet" type="text/css"
+	href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800%7CPoppins:400,500,700,800,900%7CRoboto:100,300,400,400i,500,700"> -->
+<link rel="stylesheet" type="text/css"
+	href="{% static "assets/css/google_css.css" %}">
+    
+<link href="{% static "assets/css/bootstrap.min-4.1.1.css" %}" >
+<script src="{% static "assets/js/bootstrap.min-4.1.1.js" %}"></script>
+<script src="{% static "assets/js/jquery-3.6.0.min.js" %}"></script>
+<link rel="stylesheet" href="{% static "assets/css/login-style.css" %}">
+<!-- toaster --> 
+<link rel="stylesheet" href="{% static "assets/vendors/toastr/toastr.min.css" %}">    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="{% static "assets/font.css"  %}">
+
+    
+
+<script src="{% static "assets/js/angular.min.js" %}"></script>
+<script src="{% static "assets/js/ui-grid-unstable.js" %}"></script>
+<script src="{% static "assets/js/angular-material.min.js" %}"></script>
+<script src="{% static "assets/js/1.5.6-angular-route.js" %}"></script>
+<script src="{% static "assets/js/angular-resizable.min.js" %}"></script>
+<script src="{% static "assets/js/toaster.js" %}"></script>
+<script src="{% static "assets/js/toastr.min.js" %}"></script>
+<script src="{% static "assets/js/angular-idle.min.js" %}"></script>
+<script src="{% static "assets/js/crypto-js.min.js" %}"></script>
+<script src="{% static "assets/js/angular-cookies.js" %}"></script>
+<script src="{% static "assets/js/popper.min.js" %}"></script>
+<style>
+body {
+	font-family: PwC Helvetica Neue;
+}
+</style>
+
+</head>
+<body id="top">
+	<div class="login-2 tab-box">
+		<div class="container-fluid">
+			<div class="rowDiv">
+				<div class="col-lg-5 col-md-5 col-pad-0 bg-color">
+					<div class="login-inner-form" id="myTabContent">
+
+						<div class="details">
+							<h3>Digital Workmate</h3>
+							<h2>It's nice to have you back</h2>
+							 <form id="user_login" name="user_login" method="POST">
+                                  {% csrf_token %}
+                                    {% if next %}
+                                    <input type="hidden" name="next" value="{{ next }}" />
+                                    {% endif %}
+								<div class="form-group">
+									<input type="text" name="username" class="input-text"
+										id="username" placeholder="Username" style="font-family: 'PwC Helvetica Neue';">
+								</div>
+								<div class="form-group fontpassword">
+                                    <input type="password" class="input-text" id="password" placeholder="Password" name="password">
+                                    <i class="fa fa-eye" id="togglePassword" style="cursor: pointer;"></i>
+                                </div>
+								<div style="margin-top: -25px; margin-bottom: 15px;display:flex">
+                                    <input type="checkbox" id="tnc" required="">
+                                    <label class="form-check-label" for="tnc">
+                                        <h5>
+                                            I agree to the <a href= "#1" style="color: #ffc83d;text-decoration: none;" onclick="t_and_c()">terms and conditions</a>
+                                        </h5>
+                                    </label>
+                                </div>
+								<div>
+									<span style="float: left;"> <a href="/register"
+										style="color: #EBEBEB;text-decoration: none;">Create Account</a>
+									</span> <span style="float: right;"> <input type="button"
+										class="btn-md btn-theme" id="login_submit" onclick="login_process()"  value="Sign In">
+									</span>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+
+	<div class="container-fluid">
+		<div class="copyright ml-auto">
+			<p>
+				©2024 PwC. All rights reserved. PwC refers to the PwC network and/or
+				one or more of its member firms, each of which is a separate legal
+				entity. <br> Please see <a href="http://www.pwc.com/structure"
+					target="_blank" style="color: #ffc83d">pwc.com/structure</a>&nbsp;for
+				further details.
+			</p>
+		</div>
+	</div>
+
+<script src="{% static "assets/vendors/toastr/toastr.min.js" %}"></script>
+ <!-- <script src="{% static "assets/template_js/index.js" %}"></script>   -->
+    <script>
+    
+       var URL_ROOT = "{{ WEB_API_LINK }}/"
+        
+        function t_and_c() {  
+          window.open(URL_ROOT + "terms_and_condition", '_blank', 'width=1200 ,height=650');  
+        }  
+
+    function login_process() { 
+          
+        userInfo = {}
+        userInfo["username"] = $("#username").val()
+        userInfo["password"] = $("#password").val()
+        userInfo["prod_mode"] = '1'
+        
+        var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
+        userInfo = JSON.stringify(userInfo)
+        if($('#tnc').is(":checked")){
+        console.log("hjuvvbjbkj")
+        $.ajax({
+            url: URL_ROOT + 'loginprocess/',
+            headers: {"X-CSRFToken": crf_token ,'Content-Type': undefined },
+            type: "POST",
+            crossDomain: true,
+            data: { "userInfo": userInfo },
+            success: function (data) {
+                result = JSON.parse(data)
+                if (result["status"] == 1) {
+                    $("#errormessage").hide();
+                    toastr.success("Login successfully.")
+                    window.location.href = URL_ROOT + "invoice_dashboard"
+                }
+                else {
+                    toastr.error("Invalid User Name or Password")  
+                }
+            },
+            error: function (error) {
+                toastr.error("Please try again.")
+            }
+        });
+        }else{ toastr.error("Select our terms and conditions")   }     
+    }
+        
+
+   /* function register_process() {
+
+                $("#password_error").val("");
+                var userInfo = {};
+                $.each($('#user_register').serializeArray(), function (i, field) {
+                    userInfo[field.name] = field.value;
+                });
+                $('#alert_error').hide()
+                $('#errormessage').html("")
+
+                if (!$("#tc").is(':checked')) {
+                    toastr.error("Please select Terms and Conditions.")
+                }
+                else {
+
+                    if (userInfo['new_email'] != "") {
+
+                        var crf_token = "{{ csrf_token }}"
+
+                        userInfo = JSON.stringify(userInfo)
+                        console.log(userInfo)
+                        $.ajax({
+                            url: URL_ROOT + '/registeruser/',
+                            headers: { "X-CSRFToken": '{{csrf_token}}', 'Content-Type': undefined },
+                            type: "POST",
+                            crossDomain: true,
+                            data: { userInfo },
+                            success: function (result) {
+                                var result_output = JSON.parse(result)
+                                if (result_output.status == "1") {
+                                    $('#alert_error').hide()
+                                    $('#alert_success').show()
+                                    $('#successmessage').html(result_output.Message)
+                                    toastr.success(result_output.Message)
+                                    setTimeout(function () { clearmessage(); reloadpage() }, 3000);
+
+                                }
+                                else {
+
+                                    toastr.error(result_output.Message)
+                                    setTimeout(function () { clearmessage() }, 3000);
+                                }
+
+                            }
+                        });
+
+                    } else {
+                        toastr.error("Please fill all requried information.")
+                    }
+                }
+                } */
+
+        function reloadpage() {
+                 location.reload();
+        }
+        function clearmessage() {
+                $('#alert_success').hide()
+                $('#alert_error').hide()
+                $('#errormessage').html("")
+        }
+
+        // Add event listener to the document to check for Enter key press
+        document.addEventListener('keydown', function(event) {
+        // Check if the Enter key is pressed (key code 13)
+        if (event.key === 'Enter' || event.keyCode === 13) {
+            // Get the checkbox element
+            const tncCheckbox = document.getElementById('tnc');    
+            // Toggle the checkbox checked status
+            tncCheckbox.checked = !tncCheckbox.checked;
+        }
+    });
+        
+        //password visibility
+        const passwordInput = document.getElementById('password');
+        const togglePassword = document.getElementById('togglePassword');
+        
+        // Toggle the visibility of the password field
+        togglePassword.addEventListener('click', function () {
+        
+        // Toggle between showing/hiding the password
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        
+        // Toggle the icon between eye and eye-slash
+        this.classList.toggle('fa-eye-slash');
+        });
+        
+</script>
+</body>

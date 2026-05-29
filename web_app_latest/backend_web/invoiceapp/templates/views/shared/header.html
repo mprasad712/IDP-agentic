@@ -1,0 +1,58 @@
+{% load static %}
+<input type="hidden" id="SITEROOTURL" value="{{ request.session.WEB_API_LINK }}">
+
+
+	<div class="main-header">
+					<!-- Logo Header -->
+					<div class="logo-header" background-color="#174A66">
+						<a href="/dashboard" class="logo" style="cursor: pointer;"><img
+							src="{% static "assets/img/logo.png" %}" class="navbar-brand">
+						</a>
+						<button class="topbar-toggler more">
+							<i class="icon-options-vertical"></i>
+						</button>
+						<div class="nav-toggle" style="cursor: pointer;">
+							<button class="btn btn-toggle toggle-sidebar">
+								<i class="fa fa-bars"></i>
+							</button>
+						</div>
+					</div>
+					<!-- End Logo Header -->
+					<!-- Navbar Header -->
+					<nav class="navbar navbar-header navbar-expand-lg p-0"
+						data-background-color="blue2">
+						<div class="container-fluid">
+							<ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
+                            <img
+							src="{% static "assets/img/Contract_generation.png" %}" style="height: 60px;margin-right: 20px;">
+
+								<li class="nav-item dropdown hidden-caret"><a
+									class="dropdown-toggle " data-bs-toggle="dropdown" href="#"
+									aria-expanded="false">
+
+										<div class="profileImage float-left">
+											<span id="initials">{{ request.session.first_letter }}{{ request.session.last_letter }}</span>
+										</div>
+								</a>
+									<ul class="dropdown-menu dropdown-user animated fadeIn">
+										<div class="dropdown-user-scroll scrollbar-outer">
+											<li>
+												<div class="user-box">
+													<div class="profileImage float-left">
+														<span id="initials">{{ request.session.first_letter }}{{ request.session.last_letter }}</span>
+													</div>
+													<div class="u-text">
+														<h4>Welcome:&nbsp;</span>{{ request.session.first_name }} {{ request.session.last_name }}</h4>
+														
+													</div>
+												</div>
+											</li>
+											<li><a class="dropdown-item" href="{% url "user/profile/" %}" >Account settings</a>
+                                                <a class="dropdown-item" href="{% url "changepassword" %}">Change password</a> <a
+												class="dropdown-item" href="{% url "logout" %}" >Logout</a></li>
+										</div>
+									</ul></li>
+							</ul>
+						</div>
+					</nav>
+    </div>           

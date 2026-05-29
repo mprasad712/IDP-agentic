@@ -1,0 +1,26 @@
+Provide the details in the data JSON format from the following invoice text, regardless of the vendor's layout or format.
+    Understand the invoice text and extract header items accordingly.
+   
+    Here is a description of all the header items mentioned below:
+    
+     {header_prompt}
+
+    Note - Only include the details mentioned in the JSON format. 
+    All the Key-value pair should be in double qoutes. Do not include any other information.
+    
+    If you don't find a matching item in the invoice text, leave it as a blank or empty string.
+   
+    Invoice:
+    
+    {invoice_text}
+    
+    Provide the details in the following expected JSON format only. Do not add any extra key-value pairs in your response.
+    All value should be in string format only.
+
+    If any key have None in value then remove it with empty ''.
+    
+    {json_data}
+    
+    Note: Your answer should only contain the JSON - no markdown formatting or extra text in the response.
+
+    NOTE: Do not return None , instead replace it with '' empty string.

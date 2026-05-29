@@ -1,0 +1,209 @@
+{% load static %} 
+
+<div class="sidebar sidebar-style-2" data-background-color="dark">
+					<div class="sidebar-wrapper scrollbar scrollbar-inner">
+						<div class="sidebar-content" style="padding-bottom: 20px;"></div>
+						<ul class="nav nav-primary" id="changeUserLob">
+							<div class="accordion" id="accordionExample" style="overflow-x: hidden;">
+								<div class="menucard">
+                                    <a href="/dashboard">
+									<div class="menu-card-header" id="headingOne" onclick="">
+										<h2 class="mb-0" >
+											<button class="btn btn-link" type="button">
+												<img
+										src="{% static "assets/img/PwC_Funct_Icons_Home_Fill_White_RGB.png" %}"
+										class="caseImg">
+                                                <span class="sub-item">Dashboard</span>
+											</button>
+										</h2>
+									</div></a>
+									<div class="menucard" data-toggle="collapse" data-target="#collapseOne">
+										<div class="menu-card-header" id="headingOne">
+											<h2 class="mb-0">
+												<button class="btn btn-link" type="button" data-toggle="collapse"
+													data-target="#collapseOne" aria-expanded="false"
+													aria-controls="collapseOne">
+													<img
+										src="{% static "assets/img/PwC_Funct_Icons_Settings_Outline_White_RGB.png" %}"
+										class="caseImg">
+													<span class="sub-item">Extract</span>
+													<span class="arrow" aria-hidden="true" style="margin-left: 118px;"><i class="fas fa-minus"></i></span>
+												</button>
+											</h2>
+										</div>
+
+										<div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
+											data-parent="#accordionExample">
+											<div class="menu-card-body">
+												<ul class="styled-list">
+													{% if request.session.is_local_admin == 1 %}
+													{% if request.session.prod_mode == "2" %}
+													<li><a href="{% url "contract_configuration" %}"><img
+										src="{% static "assets/img/PwC_Funct_Icons_TableData_Outline_White_RGB.png" %}"
+										class="caseImg"><span class="sub-item">Create
+																configuration</span></a></li>
+													{% else %}
+													<li><a href="{% url "define_layout" %}"><img
+										src="{% static "assets/img/PwC_Funct_Icons_TableData_Outline_White_RGB.png" %}"
+										class="caseImg"></i><span class="sub-item">Create
+																configuration</span></a></li>
+													{% endif %}
+													{% endif %}
+													<li><a href="{% url "view_configuration" %}"><img
+										src="{% static "assets/img/PwC_Funct_Icons_ListView_Outline_White_RGB.png" %}"
+										class="caseImg"><span
+																class="sub-item">Configuration list</span></a></li>
+													<li><a href="{% url "upload_invoice" %}"><img
+										src="{% static "assets/img/PwC_Funct_Icons_Upload_Outline_White_RGB.png" %}"
+										class="caseImg"></i><span class="sub-item">Upload
+																document</span></a></li>
+													<li><a href="{% url "processed" %}"><img
+										src="{% static "assets/img/PwC_Funct_Icons_CircleCheckmark_Outline_White_RGB.png" %}"
+										class="caseImg"><span
+																class="sub-item">Processed list</span></a></li>
+													<li><a href="{% url "validated" %}"><img
+										src="{% static "assets/img/PwC_Funct_Icons_Confirmed_Outline_White_RGB.png" %}"
+										class="caseImg"><span
+																class="sub-item">Reviewed list</span></a></li>
+													<li><a href="{% url "invoicedeleted" %}"><img
+										src="{% static "assets/img/PwC_Funct_Icons_Delete_Outline_White_RGB.png" %}"
+										class="caseImg"><span class="sub-item">Deleted
+																list</span></a></li>
+												</ul>
+											</div>
+										</div>
+									</div>
+									<div class="menucard" data-toggle="collapse" data-target="#collapseTwo" style="Display:none">
+										<div class="menu-card-header" id="headingTwo">
+											<h2 class="mb-0">
+												<button class="btn btn-link collapsed" type="button"
+													data-toggle="collapse" data-target="#collapseTwo"
+													aria-expanded="false" aria-controls="collapseTwo">
+													<i class="fas fa-language"></i>
+													Translation
+													<span class="arrow" aria-hidden="true" style="margin-left: 85px;"><i class="fas fa-plus"></i></span>
+												</button>
+											</h2>
+										</div>
+										
+									</div>
+									{% if request.session.is_local_admin == 1 %}
+									<div class="menucard" data-toggle="collapse" data-target="#collapseThree">
+										<div class="menu-card-header" id="headingThree">
+											<h2 class="mb-0">
+												<button class="btn btn-link collapsed" type="button"
+													data-toggle="collapse" data-target="#collapseThree"
+													aria-expanded="false" aria-controls="collapseThree">
+													<img
+										src="{% static "assets/img/PwC_Funct_Icons_Management_Outline_White_RGB.png" %}"
+										class="caseImg">
+													STP
+													<span class="arrow" aria-hidden="true" style="margin-left: 136px;"><i class="fas fa-plus"></i></span>
+												</button>
+											</h2>
+										</div>
+										<div id="collapseThree" class="collapse" aria-labelledby="headingThree"
+											data-parent="#accordionExample">
+											<div class="menu-card-body">
+												<ul class="styled-list">
+													<li><a href="{% url "stpsupplier" %}"><img
+										src="{% static "assets/img/PwC_Funct_Icons_Convert_Outline_White_RGB.png" %}"
+										class="caseImg"><span
+																class="sub-item">STP supplier</span></a></li>
+													<li><a href="{% url "stprules" %}"><img
+										src="{% static "assets/img/PwC_Funct_Icons_DocumentPolicies_Outline_White_RGB.png" %}"
+										class="caseImg"><span class="sub-item">STP
+																rules</span></a></li>
+												</ul>
+											</div>
+										</div>
+									</div>
+									<div class="menucard" data-toggle="collapse" data-target="#collapsefour">
+										<div class="menu-card-header" id="headingFour">
+											<h2 class="mb-0">
+												<button class="btn btn-link collapsed" type="button"
+													data-toggle="collapse" data-target="#collapsefour"
+													aria-expanded="false" aria-controls="collapsefour">
+													<img
+										src="{% static "assets/img/PwC_Funct_Icons_Image_Outline_White_RGB.png" %}"
+										class="caseImg">
+													Log status
+													<span class="arrow" aria-hidden="true" style="margin-left: 90px;"><i class="fas fa-plus"></i></span>
+												</button>
+											</h2>
+										</div>
+										<div id="collapsefour" class="collapse" aria-labelledby="headingfour"
+											data-parent="#accordionExample">
+											<div class="menu-card-body">
+												<ul class="styled-list">
+													<li><a href="{% url "processlog" %}"><img
+										src="{% static "assets/img/PwC_Funct_Icons_Revert_Outline_White_RGB.png" %}"
+										class="caseImg"><span
+																class="sub-item">Process log</span></a>
+                                                    </li>
+                                                    <li><a href="{% url "download" %}"><span
+																class="sub-item"><i class="fas fa-download"></i>Download Report</span></a>
+                                                    </li>
+												</ul>
+											</div>
+										</div>
+									</div>
+									<div class="menucard" data-toggle="collapse" data-target="#collapsefive">
+										<div class="menu-card-header" id="headingFive">
+											<h2 class="mb-0">
+												<button class="btn btn-link collapsed" type="button"
+													data-toggle="collapse" data-target="#collapsefive"
+													aria-expanded="false" aria-controls="collapsefive">
+													<img
+										src="{% static "assets/img/PwC_Funct_Icons_Person_Outline_White_RGB.png" %}"
+										class="caseImg">
+													Users
+													<span class="arrow" aria-hidden="true" style="margin-left: 123px;"><i class="fas fa-plus"></i></span>
+												</button>
+											</h2>
+										</div>
+										<div id="collapsefive" class="collapse" aria-labelledby="headingfive"
+											data-parent="#accordionExample">
+											<div class="menu-card-body">
+												<ul class="styled-list">
+													<li><a href="{% url "userlist" %}"><img
+										src="{% static "assets/img/PwC_Funct_Icons_Engagement_Outline_White_RGB.png" %}"
+										class="caseImg"></i><span class="sub-item">User
+																management</span></a></li>
+												</ul>
+											</div>
+										</div>
+									</div>
+                                </div>
+							</div>
+						</ul>
+						{% endif %}                        
+						</div>
+					</div>
+				</div>
+
+      <!-- /sidebar menu -->
+        <script>
+        $(document).ready(function() {
+            $('.btn-link').on('click', function() {
+                const arrow = $(this).find('.arrow i');
+
+                // Collapse all other cards and reset icons
+                $('.btn-link').not(this).each(function() {
+                    const otherArrow = $(this).find('.arrow i');
+                    otherArrow.removeClass('fa-minus').addClass('fa-plus'); // Set to plus icon
+                    $(this).removeClass('collapsed'); // Ensure button state is collapsed
+                });
+
+                // Toggle between plus and minus icons based on expanded state
+                if (arrow.hasClass('fa-plus')) {
+                    arrow.removeClass('fa-plus').addClass('fa-minus'); // Change to minus icon
+                } else {
+                    arrow.removeClass('fa-minus').addClass('fa-plus'); // Change to plus icon
+                }
+            });
+        });
+    </script>
+     
+    </div>
+  </div>

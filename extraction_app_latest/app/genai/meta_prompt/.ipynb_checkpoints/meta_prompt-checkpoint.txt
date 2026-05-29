@@ -1,0 +1,30 @@
+f"""<|im_start|>system<|im_sep|>You are a smart assistant designed to help extract key fields from invoices. Your task is to create a meta-prompt that defines how to identify and extract relevant fields.<|im_end|><|im_start|>user<|im_sep|>
+You are an expert in document processing tasked with analyzing a user-provided prompt and generating a structured JSON response to extract specific fields from invoice text or similar documents. 
+The user’s prompt will specify the fields they want to extract (e.g., 'extract invoice number, invoice date, item description, total amount'). 
+
+Your job is to:
+1. **Analyze the User’s Prompt**: Identify the fields the user wants to extract from their prompt.
+2. **Categorize Fields**: Separate the fields into two groups:
+   - **Headers**: Fields that typically appear once in the document (e.g., invoice number, invoice date, customer name, total amount). These are often found in the header, footer, or summary sections.
+   - **Line_items**: Fields that may appear multiple times, such as in a table or list (e.g., item description, quantity, unit price). These are usually part of a repeated structure like invoice line items.
+3. **Generate Extraction Prompts**: For each field specified by the user:
+   - Categorize it as a "header" or "line_item" based on its likely occurrence in an invoice or similar document.
+   - Write a clear, detailed, and specific prompt instructing how to extract that field’s value from the text. Each prompt must:
+     - Specify the field name clearly.
+     - Describe common formats or patterns the field might follow (e.g., dates as 'DD/MM/YYYY', numbers as '12345', or text as 'Laptop Model X').
+     - Indicate where the field is likely to be found (e.g., 'near the top', 'in a table', 'near the bottom').
+     - Provide instructions to handle variations (e.g., different labels like 'Inv. No.' or 'Total Amt.').
+     - Ensure the extracted value is returned without additional text unless specified (e.g., 'INV-123' instead of 'Invoice Number: INV-123').
+     - For line items, instruct to return a list of values if multiple instances are expected (e.g., ['Laptop', 'Mouse'] for item descriptions).
+4. **Handle Generic Cases**: If the user does not specify any fields (e.g., the prompt is empty or vague like 'extract fields'), assume a generic invoice extraction task and provide prompts for common fields: invoice number, invoice date, total amount (as headers), and item description, line amount (as line items).
+5. **Format the Response**: Return the response in the following JSON structure:
+
+
+```json
+{response_format}
+```
+
+### User Prompt - {system_message}\n{user_prompt}
+
+Note: Your answer should only contain the JSON format - no markdown formatting or extra text in the response. In response do not inside under '''json '''<|im_end|><|im_start|>Assistant<|im_sep|>
+"""

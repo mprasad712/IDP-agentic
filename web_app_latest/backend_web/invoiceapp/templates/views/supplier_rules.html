@@ -1,0 +1,126 @@
+{% extends 'views/shared/base.html' %}
+{% load static %}
+{% block body_block %}
+
+<input type="hidden" id="selected_config" value="1">
+
+<div class="card dash-card">
+            <div class="card-header" style="padding-bottom: 0px;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 style="font-size: 20px;" class="mb-0"><img
+										src="{% static "assets/img/PwC_Funct_Icons_CirclePlus_Fill_Black_RGB.png" %}"
+										style="height:25px">&nbsp;Create STP rules
+                        </h5>
+                            <p>Create the custom rules for suppliers to process bulk data.</p>
+                        
+                    </div>
+              </div>
+            </div>
+    <div class="card-body">
+      <div class="col-md-12 col-sm-12  ">
+        <div class="x_panel">
+          <div class="x_title" style="border-bottom:0px; display:flex">
+              <div class="col-md-3 col-sm-3  form-group has-feedback">
+               <Input type="text" value="" name="" id="stpname" class="form-control has-feedback-left"  placeholder="Enter rule name" >
+                <span class="glyphicon glyphicon-plus form-control-feedback left showp" aria-hidden="true"></span>
+              </div>
+              <div class="col-md-3 col-sm-3  form-group has-feedback">
+                 <button id="nextbtn" class="btn btn_pwc" data-toggle="modal" data-target="#nextpage" disabled style="height: 40px;width: 80px;">Next</button>
+               </div>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <!-- <div class="x_content"></div>        -->
+        </div>
+      </div>
+</div>
+
+  <div id="nextpage" class="modal fade" role="dialog">
+    <div class="modal-dialog" style="max-width:800px;margin-left:10%">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header"> 
+          <h4 class="modal-title" id="popstp"></h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="col-md-12 col-sm-12  ">
+            <div class="x_panel">
+              <div class="x_title" style="border-bottom: 0px;">
+                  <div class="col-md-12 col-sm-12  form-group">
+                    <select class="form-control has-feedback-left" id="config_name" onchange="set_config()">
+                      <option value="0">Select Configuration</option>
+                      {% for info in config_list %}
+                      <option value="{{info.config_uuid}}">{{info.config_name}}
+                      </option>
+                      {% endfor %}
+                    </select>
+                    <span class="fa fa-cogs form-control-feedback left showp" aria-hidden="true"></span>
+                  </div>
+                  <div class="col-md-12 col-sm-12  form-group x_content" style="display:none;" >
+                    <div class="row">
+                      <div class="col-md-6 col-sm-6  form-group">
+                        <select class="form-control has-feedback-left">
+                          <option value="0">STP Rules</option>
+                          <option value="">Field Confidence Score </option>
+                        </select>
+                        <span class="glyphicon glyphicon-tasks form-control-feedback left showp" aria-hidden="true"></span>
+                      </div>
+                     
+                      <div class="col-md-6 col-sm-6  form-group">
+                        <select class="form-control has-feedback-left" id="" >
+                          <option value="0">Confidence Score</option>
+                          <option value="1">80-85 %</option>
+                          <option value="1">85-90 %</option>
+                          <option value="1">90-95 %</option>
+                          <option value="1">95-100 %</option>
+                        </select>
+                        <span class="glyphicon glyphicon-random form-control-feedback left showp" aria-hidden="true"></span>
+
+                      </div>
+                  </div>
+                 
+                </div>
+              
+              </div>
+      
+            </div>
+           
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-pwc public" style="display:none;" >Publish</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+
+  <script>
+
+function set_config(){
+  if ($("#config_name").val() != "0") {
+        item = $("#config_name").val();
+        $("#config_id").val(item);
+        $(".x_content").show()
+        $(".public").show()
+    }else{
+      $(".x_content").hide()
+      $(".public").hide()
+    }
+}
+
+
+$("#stpname").mouseout(function(event){ 
+  var name = $("#stpname").val().toUpperCase()
+    $("#popstp").text(name)
+  const button = document.getElementById("nextbtn");
+    if (name === "") {  
+        button.disabled = true ; 
+    } else {
+        button.disabled = false; 
+    }
+})
+  </script>
+{% endblock %}

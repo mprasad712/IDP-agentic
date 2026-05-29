@@ -1,0 +1,714 @@
+{% extends 'views/shared/base.html' %}
+{% load static %}
+{% block body_block %}
+
+<style>
+    .nav-pills .nav-link.active,
+    .nav-pills .show>.nav-link {
+        color:
+            #fff;
+        background-color:
+            #17a2b8;
+    }
+
+    .glyphicon-plus::before {
+        content: "\002b";
+    }
+
+    .glyphicon {
+        position: relative;
+        top: 1px;
+        display: inline-block;
+        font-family: 'Glyphicons Halflings';
+        font-style: normal;
+        font-weight: 400;
+        line-height: 1;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    label {
+        opacity: .85 !important;
+    }
+
+    .fileinput-button input {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+        opacity: 0;
+        -ms-filter: 'alpha(opacity=0)';
+        font-size: 200px !important;
+        direction: ltr;
+        cursor: pointer;
+    }
+
+    input[type="file"] {
+        display: block;
+    }
+
+    label {
+        font-size: 15px !important;
+    }
+    
+    
+    /**********  create switch button **********/
+    
+    .switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+
+
+label {
+    display: inline-block !important;
+    padding-left: 15px !important;
+       
+}
+
+    nav-pills > li > .nav-link{
+    background:#000 !important;
+    }
+    nav-pills > li > .nav-link:hover{
+    color:#FBFBFB !important;
+    }
+
+    .nav-pills .nav-link.active{
+       background:#000 !important;
+    }
+
+     .nav-pills .nav-link.active:hover{
+       background:#C45340 !important;
+    }
+</style>
+<div class="row">
+
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-12">  
+                        <h5 style="font-size: 20px;" class="mb-0">User profile / settings</h5>
+                        <p>User profile to set profile settting and customize layout</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+        <div class=" ">
+            <div class="">
+                <div class="row">
+                    <div class="col-md-4">
+ 
+                        <!-- Profile Image -->
+                        <div class="card card-outline">
+                            <div class="card-body box-profile">
+                                <div class="text-center">
+                                    {% if request.session.user_profle_image == "demo_img.png" %}
+                                    <img id="profile_img" style="width:100px;height:100px;"
+                                        src="{% static "eips_data"  %}/user_profile/{{user_info.0.profile_img}}"
+                                        class="img-circle elevation-2" alt="User Image" class="img-circle">
+                                    {% else %}
+                                    <img id="profile_img" style="width: 128px;height: 128px;"
+                                        class="profile-user-img img-fluid img-circle" alt="User profile picture"
+                                        src="{% static "eips_data"  %}/user_profile/{{user_info.0.user_id}}/{{user_info.0.profile_img}}">
+                                    {% endif %}
+
+                                </div>
+
+                                <div class="text-center">
+                                    <h4 class=" mb-0">{{user_info.0.first_name}} {{user_info.0.last_name}}</h4>
+
+                                    {% if request.session.is_local_admin == 1 %}
+                                    <p>Admin ( {{user_info.0.email}})</p>
+                                    {% else %}
+                                    <p>User ({{user_info.0.email}})</p>
+                                    {% endif %}
+
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <div class="card">
+                            <div style="padding: 15px;border-bottom: solid 1px #e5e5e5;">
+                                <h3 class="card-title">About organization</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <div>
+                                <div style="padding: 10px 15px 10px 15px;border-bottom: solid 1px #e5e5e5;">
+                                    <label><i class="fas fa-envelope mr-1"></i> Business email</label>
+                                    <p class="text-muted">
+                                        {{user_info.0.business_email}}
+                                    </p>
+                                </div>
+                                <div>
+                                    <div style="padding: 10px 15px 10px 15px;border-bottom: solid 1px #e5e5e5;">
+                                        <label><i class="fas fa-phone mr-1"></i> Primary contact</label>
+                                        <p class="text-muted">
+                                            {{user_info.0.primary_contact_number}}
+                                        </p>
+                                    </div>
+
+                                </div>
+                                <div>
+                                    <div style="padding: 10px 15px 10px 15px;border-bottom: solid 1px #e5e5e5;">
+                                        <label><i class="fas fa-phone mr-1"></i> Secondary contact</label>
+                                        <p class="text-muted">
+                                            {{user_info.0.secondary_contact_number}}
+                                        </p>
+                                    </div>
+
+                                </div>
+                                <div>
+                                    <div style="padding: 10px 15px 10px 15px;border-bottom: solid 1px #e5e5e5;">
+                                        <label><i class="fas fa-map-marker-alt mr-1"></i> Organization address</label>
+                                        <p class="text-muted">
+                                            {{user_info.0.mailing_address}}
+                                        </p>
+                                    </div>
+
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-8">
+                        <div class="card card-outline">
+                            <div class="card-header p-2">
+                                <ul class="nav nav-pills">
+                                    <li class="nav-item"><a class="nav-link active" href="#settings"
+                                            data-toggle="tab">Settings</a></li>
+                                    <li class="nav-item"><a class="nav-link " href="#activity" data-toggle="tab">Change
+                                            pic</a>
+                                    </li>
+
+                                    <!-- <li class="nav-item"><a class="nav-link " href="#automate" data-toggle="tab">Automate IDP Process</a>
+                                    </li>  -->
+                                    {% if request.session.is_local_admin == 1 %}
+                                    <li class="nav-item"><a class="nav-link " href="#org_logo" data-toggle="tab">Change
+                                            organization logo</a>
+                                    </li>
+                                    {% endif %}
+                                    
+                                    <li class="nav-item"><a class="nav-link " href="#takeatour" data-toggle="tab">Take a tour</a>
+                                    </li>
+                                </ul>
+                            </div><!-- /.card-header -->
+                            <div class="card-body">
+                                <div class="tab-content">
+                                    <div class=" tab-pane" id="activity">
+                                        <form enctype="multipart/form-data">
+                                            <div class="row">
+                                                <div class="col-12" style="text-align: center;padding: 20px;">
+
+                                                    <!-- The fileinput-button span is used to style the file input field as button -->
+                                                    <span class="btn fileinput-button"
+                                                        style="border-radius: 25px;color:#ababab;cursor: grabbing;"
+                                                        title="Click to upload">
+                                                        <i class="fas fa-camera" style="font-size: 141px;"></i>
+
+                                                        <input class="btn" type="file" id="upload_file"
+                                                            name="upload_file[]" onchange="preview_image();" />
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12" style="text-align: center;padding: 20px;">
+                                                    <span class="text-muted text-lg">You are allowed to upload
+                                                        following
+                                                        ext. </span><span style="margin-left: 10px;">.PNG, .JPEG,
+                                                        JPG.</span>
+
+                                                </div>
+                                            </div>
+
+                                        </form>
+                                    </div>
+
+                                    <div class=" tab-pane" id="automate">
+                                        <form name="update_automateinfo" id="update_automateinfo"
+                                            class="form-horizontal">
+                                            {% csrf_token %}{% if next %}<input type="hidden" name="next"
+                                                value="{{ next }}" />{% endif %}
+
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label" for="about_organization">Run
+                                                    IDP</label>
+                                                <div class="col-sm-9">
+                                                    <input class="form-control" name="schedule_interval"
+                                                        id="schedule_interval" value="{{user_info.0.schedule_interval}}"
+                                                        placeholder="Run IDP" style="text-align: left;" />
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label" for="about_organization">Run
+                                                    IDP AT</label>
+                                                <div class="col-sm-9">
+                                                    <input class="form-control" name="schedule_time" id="schedule_time"
+                                                        value="{{user_info.0.schedule_time}}"
+                                                        placeholder="Run Idp Time" style="text-align: left;" />
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label" for="about_organization">Shared
+                                                    Location</label>
+                                                <div class="col-sm-9">
+                                                    <input class="form-control" name="file_shared_location"
+                                                        id="file_shared_location"
+                                                        value="{{user_info.0.file_shared_location}}"
+                                                        placeholder="Shared Location" style="text-align: left;" />
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-sm-12" style="text-align: center;">
+                                                    <button id="btn_user_automate_detail"
+                                                        onclick="update_user_profile()" class="btn"
+                                                        type="button">Update</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class=" tab-pane" id="org_logo">
+                                        <form enctype="multipart/form-data">
+                                            <div class="row">
+                                                <div class="col-12" style="text-align: center;padding: 20px;">
+
+                                                    <!-- The fileinput-button span is used to style the file input field as button -->
+                                                    <span class="btn fileinput-button"
+                                                        style="border-radius: 25px;color:#ababab;cursor: grabbing;"
+                                                        title="Click to upload">
+                                                        <i class="fas fa-camera" style="font-size: 141px;"></i>
+
+                                                        <input class="btn btn-priamry" type="file" id="upload_org_file"
+                                                            name="upload_org_file[]" onchange="preview_org_image();" />
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12" style="text-align: center;padding: 20px;">
+                                                    <span class="text-muted text-lg">You are allowed to upload
+                                                        following
+                                                        ext. </span><span style="margin-left: 10px;">.PNG, .JPEG,
+                                                        JPG.</span>
+
+                                                </div>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                    
+                                    <div class=" tab-pane" id="takeatour">
+                                        
+                                            <div class="row">
+                                                <div class="col-12" style="text-align: center;padding: 20px;">
+                                                    <label class="switch" >
+                                                      <input type="checkbox" value="1" id="atour" onclick="takeatour(this)"
+                                                      {% if user_info.0.about_organization == 1 %} checked="checked"  {%  endif  %}>
+                                                      <span class="slider round"></span>
+                                                    </label>
+                                                    
+                                                </div>
+                                            </div>
+                                            
+
+                                        
+                                    </div>
+                                    
+                                    <div class="active tab-pane" id="settings">
+                                        <form name="update_profile" id="update_profile" class="form-horizontal">
+                                            {% csrf_token %}{% if next %}<input type="hidden" name="next"
+                                                value="{{ next }}" />{% endif %}
+
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label"
+                                                    for="organization_name">Organization name</label>
+                                                <div class="col-sm-9">
+                                                    <input class="form-control"
+                                                        value="{{user_info.0.organization_name}}"
+                                                        name="organization_name" id="organization_name" type="email"
+                                                        placeholder="Name">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label" for="business_email">Business
+                                                    email</label>
+                                                <div class="col-sm-9">
+                                                    <input class="form-control" id="business_email"
+                                                        name="business_email" value="{{user_info.0.business_email}}"
+                                                        type="email" placeholder="Business Email">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label"
+                                                    for="primary_contact_number">Primary contact</label>
+                                                <div class="col-sm-9">
+                                                    <input class="form-control" id="primary_contact_number"
+                                                        name="primary_contact_number"
+                                                        value="{{user_info.0.primary_contact_number}}" type="number"
+                                                        placeholder="Primary Mobile / Landline"   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" >
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label" for="business_email">Secondary
+                                                    contact</label>
+                                                <div class="col-sm-9">
+                                                    <input class="form-control" id="secondary_contact_number"
+                                                        value="{{user_info.0.secondary_contact_number}}"
+                                                        name="secondary_contact_number" type="number"
+                                                        placeholder="Secondary Mobile / Landline"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" >
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label"
+                                                    for="mailing_address">Organization address</label>
+                                                <div class="col-sm-9">
+                                                    <input class="form-control" name="mailing_address"
+                                                        id="mailing_address" value="{{user_info.0.mailing_address}}"
+                                                        placeholder="Mailing Address" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label"
+                                                    for="organization_size">Organization size</label>
+                                                <div class="col-sm-9">
+                                                    <input class="form-control" name="organization_size"
+                                                        id="organization_size" type="text"
+                                                        value="{{user_info.0.organization_size}}"
+                                                        placeholder="Organization Size eg. 10 ,20, 10, 500 etc." />
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label" for="about_organization">About
+                                                    organization</label>
+                                                <div class="col-sm-9">
+                                                    <input class="form-control" name="about_organization"
+                                                        id="about_organization"
+                                                        value="{{user_info.0.about_organization}}"
+                                                        placeholder="About Organization" style="text-align: left;" />
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <div class="col-sm-12" style="text-align: center;">
+                                                    <button id="btn_user_detail" onclick="update_user_profile()"
+                                                        class="btn" type="button">Update</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- /.content -->
+    <script>function set_fields(result) {
+            settings = result.user_site_params
+
+            for (start = 0; start < settings.length; start++) {
+                field_id = ""
+                field_value = ""
+                field_setting_id = ""
+                $.each(settings[start], function (key, key_val) {
+                    if (key == "setting_id") {
+
+                        field_setting_id = key_val
+                    }
+                    if (key == "setting_name") {
+
+                        field_id = key_val
+                    }
+                    if (key == "setting_value") {
+
+                        field_value = key_val
+                    }
+                    if (field_id != "") {
+                        $("#" + field_id).val(field_value)
+                        $("#" + field_id).attr("setting_id", field_setting_id)
+
+                    }
+                });
+            }
+        }
+
+    </script>
+    <script>
+        var URL_ROOT = $('#SITEROOTURL').val()
+
+        var PROFILE_ROOT = "{% static "eips_data"  %}/user_profile_images/"
+        var LOGO_ROOT = "{% static "eips_data"  %}/organization_logo/"
+
+        function update_user_profile() {
+            loading()
+            var crf_token = "{{ csrf_token }}"
+
+            var userInfo = {};
+            $.each($('#update_profile').serializeArray(), function (i, field) {
+                userInfo[field.name] = field.value;
+            });
+
+            $.each($('#update_automateinfo').serializeArray(), function (i, field) {
+                userInfo[field.name] = field.value;
+            });
+
+
+            userInfo = JSON.stringify(userInfo)
+            console.log(userInfo)
+            $.ajax({
+                url: URL_ROOT + '/api_user/update_profile/',
+                headers: { "X-CSRFToken": '{{csrf_token}}', 'Content-Type': undefined },
+                type: "POST",
+                crossDomain: true,
+                data: { userInfo },
+                success: function (result) {
+                    var result_output = JSON.parse(result)
+                    if (result_output.status == "1") {
+                        toastr.success(result_output.message)
+                        unloading()
+			window.location.reload();
+                    }
+                    else {
+                        toastr.error(result_output.message)
+                        unloading()
+                    }
+
+                }
+            });
+        }
+
+
+    </script>
+    <script>
+
+        function upload_request_org_profile(fd) {
+
+
+            var UPLOAD_URL = URL_ROOT + "/api_user/upload_organization_pic/";
+            console.log(fd)
+            $.ajax({
+                url: UPLOAD_URL,
+                type: 'POST',
+                data: fd,
+                crossDomain: true,
+                processData: false,
+                contentType: false,
+                headers: { "X-CSRFToken": '{{csrf_token}}', 'Content-Type': undefined },
+
+                success: function (result) {
+                    console.log(result)
+                    if (result.success == "1") {
+
+                        $("#organization_pic_header").attr("src", LOGO_ROOT + result.user_id + "/" + result.file_name)
+                        toastr.success(result.message)
+                        unloading()
+			window.location.reload();
+                    }
+                }
+                ,
+                error: function (error) {
+                    unloading()
+                    console.log(error);
+
+                }
+            });
+        }
+        function upload_request_profile(fd) {
+
+
+            var UPLOAD_URL = URL_ROOT + "/api_user/upload_profile_pic/";
+            console.log(fd)
+            $.ajax({
+                url: UPLOAD_URL,
+                type: 'POST',
+                data: fd,
+                crossDomain: true,
+                processData: false,
+                contentType: false,
+                headers: { "X-CSRFToken": '{{csrf_token}}', 'Content-Type': undefined },
+
+                success: function (result) {
+                    console.log(result)
+                    if (result.success == "1") {
+                        $("#profile_img").attr("src", PROFILE_ROOT + result.user_id + "/" + result.file_name)
+                        $("#profile_pic_sidebar").attr("src", PROFILE_ROOT + result.user_id + "/" + result.file_name)
+                        $("#profile_pic_header").attr("src", PROFILE_ROOT + result.user_id + "/" + result.file_name)
+                        toastr.success(result.message)
+                        unloading()
+			window.location.reload();
+                    }
+                }
+                ,
+                error: function (error) {
+                    unloading()
+                    console.log(error);
+
+                }
+            });
+        }
+        function getExtension(filename) {
+            return filename.split('.').pop().toLowerCase();
+        }
+        function preview_image() {
+
+            loading()
+            var total_file = document.getElementById("upload_file").files.length;
+
+            for (var i = 0; i < total_file; i++) {
+
+                var uploadRow = '';
+                var _size = event.target.files[i].size;
+                var fSExt = new Array('Bytes', 'KB', 'MB', 'GB'),
+                    s = 0; while (_size > 900) { _size /= 1024; s++; }
+                var exactSize = (Math.round(_size * 100) / 100) + ' ' + fSExt[s];
+
+                var fileExt = getExtension(event.target.files[i].name);
+                if (fileExt == 'png' || fileExt == 'jpg' || fileExt == 'jpeg' || fileExt == "gif") {
+                    var file_data = $("#upload_file").prop("files")[i];
+                    var fd = new FormData();
+                    fd.append("file", file_data);
+
+                    upload_request_profile(fd)
+                    unloading()
+
+                } else {
+                    unloading()
+                    toastr.error("Only .png, jpeg,jpg file is allowed.")
+
+                }
+
+            }
+        }
+
+        function preview_org_image() {
+
+            var total_file = document.getElementById("upload_org_file").files.length;
+
+            for (var i = 0; i < total_file; i++) {
+
+                var uploadRow = '';
+                var _size = event.target.files[i].size;
+                var fSExt = new Array('Bytes', 'KB', 'MB', 'GB'),
+                    s = 0; while (_size > 900) { _size /= 1024; s++; }
+                var exactSize = (Math.round(_size * 100) / 100) + ' ' + fSExt[s];
+
+                var fileExt = getExtension(event.target.files[i].name);
+                if (fileExt == 'png' || fileExt == 'jpg' || fileExt == 'jpeg' || fileExt == "gif") {
+                    var file_data = $("#upload_org_file").prop("files")[i];
+                    var fd = new FormData();
+                    fd.append("file", file_data);
+
+                    upload_request_org_profile(fd)
+                    unloading()
+
+                } else {
+                    unloading()
+                    toastr.error("Only .png, jpeg,jpg file is allowed.")
+
+                }
+
+            }
+        }
+
+    function takeatour(element){
+    
+        field_info = {}
+       if($('#atour:checked').val()==1){
+                field_info['atour']= '1'
+        }else{
+                field_info['atour']= '0'
+        }
+        field_info = JSON.stringify(field_info)
+      $.ajax({
+              url: $('#SITEROOTURL').val() + '/takeatour/',
+
+              headers: { "X-CSRFToken": '{{ csrf_token }}', 'Content-Type': undefined },
+              type: "POST",
+              crossDomain: true,
+              dataType: "json",
+              data: { field_info },
+              success: function (result_output) {
+                  toastr.success(result_output.message)
+                  
+              },
+              error: function (error) {
+               
+                console.log(error);
+                
+              }
+        });    
+    }
+
+    </script>
+    {% endblock %}

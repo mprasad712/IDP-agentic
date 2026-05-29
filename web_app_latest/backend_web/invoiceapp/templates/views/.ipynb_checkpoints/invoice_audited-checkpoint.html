@@ -1,0 +1,85 @@
+{% extends 'views/shared/base.html' %}
+{% load static %}
+{% block body_block %}
+
+<div class="row">
+
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="card dash-card">
+            <div class="card-header" style="padding-bottom: 0px;">
+                        <h5 style="font-size: 20px;" class="mb-0"><img
+										src="{% static "assets/img/PwC_Funct_Icons_Confirmed_Outline_Black_RGB.png" %}"
+										class="caseImg">&nbsp;Validate document(s) list</h5>
+                        <p>List of documents that were processed by the system and audited by the user</p>
+                    </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <div class="card-box table-responsive">
+                      
+                        <table id="reviewlist" class="display dataTable no-footer" style="width:99%">
+                            <thead>
+                            <tr>
+                                <th style="width:4%">#</th>
+                                <th style="width:35%">Document name</th>
+                                <th style="width:18%">Invoice number</th>
+                                <th style="width: 15%;">Invoice date</th>
+                                <th style="width: 15%;">Audited date</th>
+                                <th style="width:15%">Audited by</th> 
+                                <th style="width: 3%;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if auditedData %}
+                            {% for info in auditedData %}
+
+                            <tr>
+                                <td><a href="{% url 'audit_detail' pk=info.UUID  %}">{{ forloop.counter }}</a></td>
+
+                                <td><a href="{% url 'audit_detail' pk=info.UUID  %}">{{info.original_file_name}}</a></td>
+                                {% if info.invoice_number is null %}
+                                <td>
+
+                                </td>
+                                {% else %}
+                                <td>
+                                    {{info.invoice_number}}
+                                </td>
+                                {% endif %}
+                                <td>{{info.invoice_date}}</td>
+                                <td>{{info.audited_datetime}}</td>
+                                <td>{{info.first_name}} {{info.last_name}}</td>
+                                <td style="text-align: center;color:green;font-size:15px;">
+                                    {% if info.audited_status == "3" %}
+                                     <!-- <i class="fa-regular fa-circle-check" style="color:#05de05"></i> -->
+                                     <i class="fa-solid fa-circle-check"></i>
+                                     <!-- <i class="glyphicon glyphicon-check" style="color:#05de05"></i> -->
+                                    {% endif %}
+                                </td>
+
+                            </tr>
+                            {% endfor %}
+                            {% endif %}
+                        </tbody>
+                       
+                    </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- end data table  -->
+    <!-- ============================================================== -->
+</div>
+<script>
+    $(document).ready( function() {
+    $('#reviewlist').dataTable({
+        /* Disable initial sort */
+        "aaSorting": [],
+        destroy: true
+    });
+})
+</script>
+
+{% endblock %}

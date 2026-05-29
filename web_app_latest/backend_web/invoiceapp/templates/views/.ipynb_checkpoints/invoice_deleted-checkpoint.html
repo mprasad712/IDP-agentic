@@ -1,0 +1,59 @@
+{% extends 'views/shared/base.html' %}
+{% load static %}
+{% block body_block %}
+
+
+
+<div class="col-md-12">
+
+								<div class="card dash-card">
+                                    <div class="card-header" style="padding-bottom: 0px;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 style="font-size: 20px;" class="mb-0"><img
+										src="{% static "assets/img/PwC_Funct_Icons_Delete_Outline_Black_RGB.png" %}"
+										class="caseImg">&nbsp;Deleted document(s) list</h5>
+                            <p>List of documents that were deleted by the user without being processed.</p>
+                    </div>
+
+                </div>
+
+            </div>
+									<div class="card-body">
+                        
+         
+                        <table  id="myTable" class="display">
+                             <thead>
+                            <tr>
+                                <th style="width:4%;">#1</th>
+                                <th style="width:50%;">Document name</th>
+                                <th>Deleted by</th>
+                                <th>Deleted date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if Deleted_Data %}
+                            {% for info in Deleted_Data %}
+                            <tr>
+                              
+                                <td> {{ forloop.counter }} </td>
+                                <td> {{info.file_name}} </td>
+                                <td>{{info.first_name}} {{info.last_name}}</td>
+                                <td>{{info.deleted_datetime |default_if_none:""}}</td>
+                            </tr>
+                            {% endfor %}
+                            {% endif %}
+                        </tbody>
+                        
+                    </table>
+                    </div>
+                </div>
+            </div>
+
+<script>
+
+      $(document).ready(function() {
+            $('#myTable').DataTable();
+        });
+</script>
+{% endblock %}

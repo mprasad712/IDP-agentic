@@ -1,0 +1,1158 @@
+{% extends 'views/shared/base.html' %}
+{% load static %}
+{% block body_block %}
+
+<style>
+
+.info-container {
+    position: relative;
+    display: inline-block;
+}
+    
+.info_text {
+    display: none;
+    position: absolute;
+    /* left: 10px; */
+    background-color: #000000;
+    border: 1px solid #ccc;
+    padding: 8px;
+    z-index: 3;
+    white-space: nowrap;
+    border-radius: 4px;
+    color: white;
+}
+
+.icon:hover + .info_text {
+    display: block; /* Show text on hover */
+}
+    
+</style>
+
+<div class="col-md-12">
+<div class="card">
+    <div class="card-body">
+<div id="config_panel" class="modal fade" role="dialog" style="padding-left:70px !important">
+    <div class="modal-dialog" style="max-width:1180px;">
+        <!-- Modal content-->
+        <div class="modal-content" style="height:580px;">
+            <div class="modal-header" style="padding: .5rem .5rem;">
+                <h4 class="modal-title" id="popstp" style="font-size: 1.5rem;padding: 0px 10px;"> Create Configuration</h4>
+                <div class="info-container">
+        <i class="fa-solid fa-circle-info icon" style="font-size: 1.3rem;margin: 8px 0px;cursor: pointer;"></i>
+        <span class="info_text">You can create your own custom configuration list.</span>
+    </div>
+                <!-- <i class="fa-solid fa-circle-info" style="font-size: 1.3rem;margin: 8px 0px;"></i>
+                <span class="info_text">You can create your own custom configration list.</span> -->
+                <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="max-height:540px;overflow-y: auto;">                     
+                           <div class="row">
+
+                                <div class="col-md-6 col-sm-6 ">
+                                         <div class="x_content">
+                                            <ul class="nav nav-tabs bar_tabs padding-l-1" id="myTab" role="tablist">
+                                                <li class="nav-item">
+                                                    <a class="nav-link active" id="standard-tab" data-toggle="tab"
+                                                        href="#standard" role="tab" aria-controls="standard"
+                                                        aria-selected="true">Standard</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" id="lineitem-tab" data-toggle="tab"
+                                                        href="#lineitem" role="tab" aria-controls="lineitem"
+                                                        aria-selected="false">Line Items</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" id="userdefine-tab" data-toggle="tab" href="#userdefine"
+                                                        role="tab" aria-controls="userdefine" aria-selected="false">User Define</a>
+                                                </li>
+                                                
+                                                <!-- <li class="nav-item">
+                                                    <a class="nav-link" id="userprompt-tab" data-toggle="tab" href="#userprompt"
+                                                        role="tab" aria-controls="userprompt" aria-selected="false">User Prompt</a>
+                                                </li> -->
+                                               
+                                            </ul>
+                                            <div class="tab-content" id="myTabContent">
+                                                <div class="tab-pane fade show active" id="standard" role="tabpanel"
+                                                    aria-labelledby="standard-tab">
+
+                                                    <div id="stfield" class="pt-25">
+                                                        <div class="row">
+                                                            <div class="col-sm-4">
+                                                                <!-- checkbox -->
+                                                                <div class="form-group clearfix">
+
+                                                                    <div class="icheck-success ">
+                                                                        <input type="checkbox" id="File_Name"
+                                                                            data_type="text" disabled="disabled"
+                                                                            checked="checked">
+                                                                        <label for="File_Name">
+                                                                            File Name
+                                                                        </label>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-4">
+                                                                <!-- checkbox -->
+                                                                <div class="form-group clearfix">
+
+                                                                    <div class="icheck-success ">
+                                                                        <input type="checkbox" data_type="number"
+                                                                            id="PO_Number" class="sf">
+                                                                        <label for="PO_Number">
+                                                                            PO Number
+                                                                        </label>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-4">
+                                                                <!-- checkbox -->
+                                                                <div class="form-group clearfix">
+
+                                                                    <div class="icheck-success ">
+                                                                        <input type="checkbox" data_type="number"
+                                                                            id="Invoice_Number" class="sf">
+                                                                        <label for="Invoice_Number">
+                                                                            Invoice Number
+                                                                        </label>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-sm-4">
+                                                                <!-- checkbox -->
+                                                                <div class="form-group clearfix">
+
+                                                                    <div class="icheck-success ">
+                                                                        <input type="checkbox" id="Account_Number"
+                                                                            data_type="number" class="sf">
+                                                                        <label for="Account_Number">
+                                                                            Account Number
+                                                                        </label>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-4">
+                                                                <!-- checkbox -->
+                                                                <div class="form-group clearfix">
+
+                                                                    <div class="icheck-success ">
+                                                                        <input type="checkbox" id="Invoice_Date"
+                                                                            data_type="date" class="sf">
+                                                                        <label for="Invoice_Date">
+                                                                            Invoice Date
+                                                                        </label>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-4">
+                                                            <!-- checkbox -->
+                                                            <div class="form-group clearfix">
+
+                                                                <div class="icheck-success ">
+                                                                    <input type="checkbox" id="country" data_type="text"
+                                                                        class="sf">
+                                                                    <label for="country">
+                                                                         Country
+                                                                    </label>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-sm-4">
+                                                                <!-- checkbox -->
+                                                                <div class="form-group clearfix">
+
+                                                                    <div class="icheck-success ">
+                                                                        <input type="checkbox" id="Tax_Amount"
+                                                                            data_type="number" class="sf">
+                                                                        <label for="Tax_Amount">
+                                                                            Tax Amount
+                                                                        </label>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-4">
+                                                                <!-- checkbox -->
+                                                                <div class="form-group clearfix">
+
+                                                                    <div class="icheck-success ">
+                                                                        <input type="checkbox" id="Shipping_Amount"
+                                                                            data_type="number" class="sf">
+                                                                        <label for="Shipping_Amount">
+                                                                            Shipping Amount
+                                                                        </label>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-4">
+                                                                <!-- checkbox -->
+                                                                <div class="form-group clearfix">
+
+                                                                    <div class="icheck-success ">
+                                                                        <input type="checkbox" id="Total_Amount"
+                                                                            data_type="number" class="sf">
+                                                                        <label for="Total_Amount">
+                                                                            Total Amount
+                                                                        </label>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                        <div class="col-sm-4">
+                                                            <!-- checkbox -->
+                                                            <div class="form-group clearfix">
+                                                                <div class="icheck-success ">
+                                                                    <input type="checkbox" id="Invoice_Taxable_Value"
+                                                                        data_type="number" class="sf">
+                                                                    <label for="Invoice_Taxable_Value">
+                                                                         Invoice Taxable Value
+                                                                    </label>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <!-- checkbox -->
+                                                            <div class="form-group clearfix">
+
+                                                                <div class="icheck-success ">
+                                                                    <input type="checkbox" id="Gst_Tax_Type"
+                                                                        data_type="text" class="sf">
+                                                                    <label for="Gst_Tax_Type">
+                                                                        GST Tax Type
+                                                                    </label>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <!-- checkbox -->
+                                                            <div class="form-group clearfix">
+
+                                                                <div class="icheck-success ">
+                                                                    <input type="checkbox" id="Gst_Rate"
+                                                                        data_type="text" class="sf">
+                                                                    <label for="Gst_Rate">
+                                                                         GST Rate
+                                                                    </label>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                        <div class="row">
+                                                            <div class="col-sm-4">
+                                                                <!-- checkbox -->
+                                                                <div class="form-group clearfix">
+
+                                                                    <div class="icheck-success ">
+                                                                        <input type="checkbox" id="Currency"
+                                                                            data_type="amount" class="sf">
+                                                                        <label for="Currency">
+                                                                            Currency
+                                                                        </label>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        <div class="col-sm-4">
+                                                                <!-- checkbox -->
+                                                                <div class="form-group clearfix">
+
+                                                                    <div class="icheck-success ">
+                                                                        <input type="checkbox" id="Subtotal"
+                                                                            data_type="number" class="sf">
+                                                                        <label for="Subtotal">
+                                                                            Subtotal
+                                                                        </label>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        <div class="col-sm-4">
+                                                            <!-- checkbox -->
+                                                            <div class="form-group clearfix">
+
+                                                                <div class="icheck-success ">
+                                                                    <input type="checkbox" id="Irn" data_type="alphanumeric"
+                                                                        class="sf">
+                                                                    <label for="Irn">
+                                                                        IRN
+                                                                    </label>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                        <div class="row">
+                                                            <div class="col-sm-4">
+                                                            <!-- checkbox -->
+                                                            <div class="form-group clearfix">
+
+                                                                <div class="icheck-success ">
+                                                                    <input type="checkbox" id="Delivery_Location"
+                                                                        data_type="text" class="sf">
+                                                                    <label for="Delivery_Location">
+                                                                        Delivery Location
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                            <div class="col-sm-4">
+                                                                <!-- checkbox -->
+                                                                <div class="form-group clearfix">
+
+                                                                    <div class="icheck-success ">
+                                                                        <input type="checkbox" id="Bill_To_Address"
+                                                                            data_type="address" class="sf">
+                                                                        <label for="Bill_To_Address">
+                                                                            Bill to Address
+                                                                        </label>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-4">
+                                                                <!-- checkbox -->
+                                                                <div class="form-group clearfix">
+
+                                                                    <div class="icheck-success ">
+                                                                        <input type="checkbox" id="Ship_To_Address"
+                                                                            data_type="address" class="sf">
+                                                                        <label for="Ship_To_Address">
+                                                                            Ship to Address
+                                                                        </label>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-sm-4">
+                                                                <!-- checkbox -->
+                                                                <div class="form-group clearfix">
+
+                                                                    <div class="icheck-success ">
+                                                                        <input type="checkbox" id="Delivery_Gstn"
+                                                                            data_type="text" class="sf">
+                                                                        <label for="Delivery_Gstn">
+                                                                            Delivery GSTIN
+                                                                        </label>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-4">
+                                                            <!-- checkbox -->
+                                                            <div class="form-group clearfix">
+
+                                                                <div class="icheck-success ">
+                                                                    <input type="checkbox" id="Supplier_Gstn"
+                                                                        data_type="text" class="sf">
+                                                                    <label for="Supplier_Gstn">
+                                                                        Supplier GSTIN
+                                                                    </label>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                            <div class="col-sm-4">
+                                                                <!-- checkbox -->
+                                                                <div class="form-group clearfix">
+
+                                                                    <div class="icheck-success ">
+                                                                        <input type="checkbox" id="Due_Date"
+                                                                            data_type="date" class="sf">
+                                                                        <label for="Due_Date">
+                                                                            Due Date
+                                                                        </label>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-sm-4">
+                                                            <!-- checkbox -->
+                                                            <div class="form-group clearfix">
+
+                                                                <div class="icheck-success ">
+                                                                    <input type="checkbox" id="Pwc_Entity_Name"
+                                                                        data_type="text" class="sf">
+                                                                    <label for="Pwc_Entity_Name">
+                                                                        Entity Name
+                                                                    </label>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                            <div class="col-sm-4">
+                                                                <!-- checkbox -->
+                                                                <div class="form-group clearfix">
+
+                                                                    <div class="icheck-success ">
+                                                                        <input type="checkbox" id="Supplier_Name"
+                                                                            data_type="text" class="sf">
+                                                                        <label for="Supplier_Name">
+                                                                            Supplier Name
+                                                                        </label>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-4">
+                                                            <!-- checkbox -->
+                                                            <div class="form-group clearfix">
+
+                                                                <div class="icheck-success ">
+                                                                    <input type="checkbox" id="Supplier_Pan"
+                                                                        data_type="text" class="sf">
+                                                                    <label for="Supplier_Pan">
+                                                                        Supplier Pan
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        </div>
+                                                        <div class="row">
+                                                        
+                                                        <div class="col-sm-4">
+                                                            <!-- checkbox -->
+                                                            <div class="form-group clearfix">
+
+                                                                <div class="icheck-success ">
+                                                                    <input type="checkbox" id="Supplier_City"
+                                                                        data_type="address" class="sf">
+                                                                    <label for="Supplier_City">
+                                                                        Supplier City
+                                                                    </label>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <!-- checkbox -->
+                                                            <div class="form-group clearfix">
+
+                                                                <div class="icheck-success ">
+                                                                    <input type="checkbox" id="Supplier_State"
+                                                                        data_type="text" class="sf">
+                                                                    <label for="Supplier_State">
+                                                                        Supplier State
+                                                                    </label>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <!-- checkbox -->
+                                                            <div class="form-group clearfix">
+
+                                                                <div class="icheck-success ">
+                                                                    <input type="checkbox" id="Invoice_Value"
+                                                                        data_type="number" class="sf">
+                                                                    <label for="Invoice_Value">
+                                                                        Invoice Value
+                                                                    </label>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    </div>
+                                                    <div class="rplace">
+                                                        <input id="save-stdfield-button" class="btn btn_pwc"
+                                                            type="button" value="Add Field(s)">
+                                                    </div>
+                                                </div>
+                                              
+                                                <div class="tab-pane fade" id="lineitem" role="tabpanel"
+                                                    aria-labelledby="lineitem-tab">
+                                                    <div id="dynamic_field_checkbox" class="card-body linepanel">
+                                                        <div class="linetag">Place synonym with comma seprated</div>
+                                                        <div class="row form-group mb-7" style="padding-left:15px !important;">
+                                                            <div class="col-4">
+                                                                <!-- checkbox -->
+                                                                <div class="clearfix">
+
+                                                                    <div class="icheck-success ">
+                                                                        <input type="checkbox" id="line_no" class="tsf">
+                                                                        <label for="line_no"> Line Number </label>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <input type="text" class="form-control"
+                                                                    id="line_no_value" placeholder="">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row form-group  mb-7">
+                                                            <div class="col-4">
+                                                                <!-- checkbox -->
+                                                                <div class="form-group clearfix">
+
+                                                                    <div class="icheck-success ">
+                                                                        <input type="checkbox" id="order_number"
+                                                                            class="tsf">
+                                                                        <label for="order_number">
+                                                                            Order Number
+                                                                        </label>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <input type="text" class="form-control"
+                                                                    id="order_number_value" placeholder="">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row form-group  mb-7">
+                                                            <div class="col-4">
+                                                                <!-- checkbox -->
+                                                                <div class="form-group clearfix">
+
+                                                                    <div class="icheck-success ">
+                                                                        <input type="checkbox" id="description"
+                                                                            class="tsf">
+                                                                        <label for="description">
+                                                                            Description
+                                                                        </label>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <input type="text" class="form-control mt-9"
+                                                                    id="description_value" placeholder="">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row form-group  mb-7">
+                                                            <div class="col-4">
+                                                                <!-- checkbox -->
+                                                                <div class="form-group clearfix">
+
+                                                                    <div class="icheck-success ">
+                                                                        <input type="checkbox" id="unit_price"
+                                                                            class="tsf">
+                                                                        <label for="unit_price">
+                                                                            Unit Price
+                                                                        </label>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <input type="text" class="form-control mt-9"
+                                                                    id="unit_price_value" placeholder="">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row form-group  mb-7">
+                                                            <div class="col-4">
+                                                                <!-- checkbox -->
+                                                                <div class="form-group clearfix">
+
+                                                                    <div class="icheck-success ">
+                                                                        <input type="checkbox" id="amount" class="tsf">
+                                                                        <label for="amount">
+                                                                            Amount
+                                                                        </label>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <input type="text" class="form-control mt-9"
+                                                                    id="amount_value" placeholder="">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row form-group  mb-7">
+                                                            <div class="col-4">
+                                                                <!-- checkbox -->
+                                                                <div class="form-group clearfix">
+
+                                                                    <div class="icheck-success ">
+                                                                        <input type="checkbox" id="unit" class="tsf">
+                                                                        <label for="unit">
+                                                                            Unit
+                                                                        </label>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <input type="text" class="form-control" id="unit_value"
+                                                                    placeholder="">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row form-group mb-7">
+                                                            <div class="col-4">
+                                                                <!-- checkbox -->
+                                                                <div class="form-group clearfix">
+
+                                                                    <div class="icheck-success ">
+                                                                        <input type="checkbox" id="quantity"
+                                                                            class="tsf">
+                                                                        <label for="quantity">
+                                                                            Quantity
+                                                                        </label>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <input type="text" class="form-control"
+                                                                    id="quantity_value" placeholder="">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row form-group mb-7">
+                                                            <div class="col-4">
+                                                                <div class="form-group clearfix">
+
+                                                                    <div class="icheck-success ">
+                                                                        <input type="checkbox" id="total_amount"
+                                                                            class="tsf">
+                                                                        <label for="total_amount">
+                                                                            Total Amount
+                                                                        </label>
+                                                                    </div>
+
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <input type="text" class="form-control"
+                                                                    id="total_amount_value" placeholder="">
+                                                            </div>
+                                                        </div>
+                                                      
+
+                                                    <div class="row form-group mb-7">
+                                                        <div class="col-4">
+                                                            <div class="form-group clearfix">
+                                                                <div class="icheck-success">
+                                                                    <input type="checkbox" id="hsn_code" class="tsf">
+                                                                    <label for="hsn_code">
+                                                                        HSN Code
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-8">
+                                                            <input type="text" class="form-control mt-9"
+                                                                id="hsn_code_value" placeholder="">
+                                                        </div>
+                                                    </div>
+                                                        <div class="row form-group mb-7">
+                                                        <div class="col-4">
+                                                            <div class="form-group clearfix">
+                                                                <div class="icheck-success">
+                                                                    <input type="checkbox" id="igst_value" class="tsf">
+                                                                    <label for="igst_value">
+                                                                        IGST Value
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-8">
+                                                            <input type="text" class="form-control mt-9"
+                                                                id="igst_value_value" placeholder="">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row form-group mb-7">
+                                                        <div class="col-4">
+                                                            <div class="form-group clearfix">
+                                                                <div class="icheck-success">
+                                                                    <input type="checkbox" id="igst_rate" class="tsf">
+                                                                    <label for="igst_rate">
+                                                                        IGST Rate
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-8">
+                                                            <input type="text" class="form-control mt-9"
+                                                                id="igst_rate_value" placeholder="">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row form-group mb-7">
+                                                        <div class="col-4">
+                                                            <div class="form-group clearfix">
+                                                                <div class="icheck-success">
+                                                                    <input type="checkbox" id="cgst_value" class="tsf">
+                                                                    <label for="cgst_value">
+                                                                        CGST Value
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-8">
+                                                            <input type="text" class="form-control mt-9"
+                                                                id="cgst_value_value" placeholder="">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row form-group mb-7">
+                                                        <div class="col-4">
+                                                            <div class="form-group clearfix">
+                                                                <div class="icheck-success">
+                                                                    <input type="checkbox" id="cgst_rate" class="tsf">
+                                                                    <label for="cgst_rate">
+                                                                        CGST Rate
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-8">
+                                                            <input type="text" class="form-control mt-9"
+                                                                id="cgst_rate_value" placeholder="">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row form-group mb-7">
+                                                        <div class="col-4">
+                                                            <div class="form-group clearfix">
+                                                                <div class="icheck-success">
+                                                                    <input type="checkbox" id="sgst_value" class="tsf">
+                                                                    <label for="sgst_value">
+                                                                        SGST Value
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-8">
+                                                            <input type="text" class="form-control mt-9"
+                                                                id="sgst_value_value" placeholder="">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row form-group mb-7">
+                                                        <div class="col-4">
+                                                            <div class="form-group clearfix">
+                                                                <div class="icheck-success">
+                                                                    <input type="checkbox" id="sgst_rate" class="tsf">
+                                                                    <label for="sgst_rate">
+                                                                        SGST Rate
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-8">
+                                                            <input type="text" class="form-control mt-9"
+                                                                id="sgst_rate_value" placeholder="">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row form-group mb-7">
+                                                        <div class="col-4">
+                                                            <div class="form-group clearfix">
+                                                                <div class="icheck-success">
+                                                                    <input type="checkbox" id="utgst_value" class="tsf">
+                                                                    <label for="utgst_value">
+                                                                        UTGST Value
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-8">
+                                                            <input type="text" class="form-control mt-9"
+                                                                id="utgst_value_value" placeholder="">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row form-group mb-7">
+                                                        <div class="col-4">
+                                                            <div class="form-group clearfix">
+                                                                <div class="icheck-success">
+                                                                    <input type="checkbox" id="utgst_rate" class="tsf">
+                                                                    <label for="utgst_rate">
+                                                                        UTGST Rate
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-8">
+                                                            <input type="text" class="form-control mt-9"
+                                                                id="utgst_rate_value" placeholder="">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row form-group mb-7">
+                                                        <div class="col-4">
+                                                            <div class="form-group clearfix">
+                                                                <div class="icheck-success">
+                                                                    <input type="checkbox" id="gst_category"
+                                                                        class="tsf">
+                                                                    <label for="gst_category">
+                                                                        GST Category
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-8">
+                                                            <input type="text" class="form-control mt-9"
+                                                                id="gst_category_value" placeholder="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group mb-7">
+                                                        <div class="col-4">
+                                                            <div class="form-group clearfix">
+                                                                <div class="icheck-success">
+                                                                    <input type="checkbox" id="vat_category"
+                                                                        class="tsf">
+                                                                    <label for="vat_category">
+                                                                        VAT Category
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-8">
+                                                            <input type="text" class="form-control mt-9"
+                                                                id="vat_category_value" placeholder="">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row form-group mb-7">
+                                                        <div class="col-4">
+                                                            <div class="form-group clearfix">
+                                                                <div class="icheck-success">
+                                                                    <input type="checkbox" id="vat_rate" class="tsf">
+                                                                    <label for="vat_rate">
+                                                                        VAT Rate
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-8">
+                                                            <input type="text" class="form-control mt-9"
+                                                                id="vat_rate_value" placeholder="">
+                                                        </div>
+                                                    </div>
+
+                                                        <div class="rplace">
+                                                            <input id="add-standard-dynamic" class="btn btn_pwc"
+                                                                type="button" value="Add Field(s)">
+                                                        </div>
+
+                                                    </div>
+
+
+                                                </div>
+                                                <div class="tab-pane fade" id="userdefine" role="tabpanel"
+                                                    aria-labelledby="userdefine-tab">
+                                                    <div class="form-group row pt-25">
+                                                        <div class="col-md-5">
+                                                            <input type="text" id="custom_field_input"
+                                                                class="form-control" maxlength="30" placeholder="Enter Standard User Define Fields" value="">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <select class="form-control customDropdown" id="custom_field_datatype">
+                                                                <option value="0">Select Data Type</option>
+                                                                <option value="text">Text</option>
+                                                                <option value="longtext">Long Text</option>
+                                                                <option value="number">Number</option>
+                                                                <option value="date">Date</option>
+                                                                <option value="alphanumeric">Alphanumeric</option>
+                                                                <option value="address">Address</option>
+                                                                <option value="email">Email</option>
+                                                                <option value="phone">Phone</option>
+                                                                <option value="count">Count</option>
+                                                                <option value="amount">Amount</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class=" col-md-3" style="text-align: right;">
+                                                            <input type="button" id="add-custom-static"
+                                                                class="btn btn_pwc" value="Add Field(s)">
+
+                                                        </div>
+
+                                                        <div class="col-md-12 text-muted" id="customError"></div>
+
+                                                    </div>
+                                                    <div id="dynamic_field_input" class="form-group pt-25">
+
+                                                        <div class="form-group  field_wrapper" id="dynamic_field_input">
+                                                            <div class="row">
+                                                                <div class="col-md-11">
+                                                                    <input type="text" name="field_name[]"
+                                                                        maxlength="30" value=""
+                                                                        placeholder="Enter User Define Line Items"
+                                                                        class="form-control stan-input custom_field_input_table" />
+
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <a href="javascript:void(0);" class="add_button"
+                                                                        title="Add field"><i
+                                                                            class="fa fa-plus"></i></a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="rplace">
+                                                        <input id="add-custom-dynamic" class="btn btn_pwc" type="button"
+                                                            value="Add Field(s)">
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="tab-pane fade" id="userprompt" role="tabpanel"
+                                                    aria-labelledby="userprompt-tab">
+                                                    <div class="form-group row pt-25">
+                                                        <div class="col-md-10">
+                                                            <textarea  placeholder="Enter Your Prompt Here" rows="7" cols="50"></textarea>
+                                                        </div>
+
+                                                    </div>
+                                                   
+                                                    <div class="rplace">
+                                                        <input  class="btn btn_pwc" type="button"
+                                                            value="Submit">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        
+                                 </div>
+                                </div>
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="x_content">
+                                        <div class="x_title">
+                                            <ul class="nav navbar-right panel_toolbox">
+                                                <li><input type="text" id="config_name" class="form-control"
+                                                        maxlength="30" placeholder="Configuration Name" value=""></li>
+                                                <li>&nbsp;</li>
+                                                <li><input id="launch-idp" class="btn btn_pwc" type="button"
+                                                        value="Publish" style="line-height:28px;"></li>
+                                            </ul>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <div class="x_content">
+
+                                            <div class="card card-info ">
+                                                <div style="padding: 10px; background:#000;">
+                                                    <h4 class="card-title"><i class="fa fa-cogs"></i> Preview Standard
+                                                        Fields </h4>
+                                                </div>
+                                                <!-- /.card-header -->
+                                                <div class="card-body draggable border-top">
+
+                                                    <form id="idp_user_form">
+                                                        <div id="entity-form" class="sort">
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div class="card card-info">
+                                                <div style="padding: 10px;background:#000;">
+                                                    <h4 class="card-title"> <i class="fa fa-list"></i> Preview Line Item
+                                                        Fields</h4>
+                                                </div>
+                                                <!-- /.card-header -->
+                                                <div class="card-body draggable border-top">
+                                                    <table class="table table table-responsive table-hover dataTable"
+                                                        id="example2" role="grid" aria-describedby="example2_info" style="height:54px;">
+                                                        <thead id="table_heading">
+                                                        </thead>
+                                                        <tbody id="table_body">
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                                <!-- /.card-body -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                               
+                         </div>
+                      </div>
+
+                </div>
+               
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+
+
+<script src="{% static "assets/build/js/addfield.js" %}"></script>
+<script src="{% static "assets/build/js/bootstrap-maxlength.min.js" %}"></script>
+
+<script>
+    
+    $(document).ready(function(){
+        $("#config_panel").modal('show');
+    });
+
+    $(function () {
+        $("#custom_field_input").keypress(function (e) {
+            var keyCode = e.keyCode || e.which;
+            $("#customError").html("");
+            //Regex for Valid Characters i.e. Alphabets and Numbers.
+            var regex = /^[A-Za-z0-9_ ]+$/;
+            //Validate TextBox value against the Regex.
+            var isValid = regex.test(String.fromCharCode(keyCode));
+            if (!isValid) {
+                $("#customError").html("Special character are not allowed.");
+            }
+            return isValid;
+        });
+
+        $("input[maxlength]").maxlength();
+
+    });
+
+
+
+    $(function () {
+        $(".custom_field_input_table").keypress(function (e) {
+            var keyCode = e.keyCode || e.which;
+            $("#customError").html("");
+            //Regex for Valid Characters i.e. Alphabets and Numbers.
+            var regex = /^[A-Za-z0-9_ ]+$/;
+            //Validate TextBox value against the Regex.
+            var isValid = regex.test(String.fromCharCode(keyCode));
+            if (!isValid) {
+                $("#customError").html("Special character are not allowed.");
+            }
+            return isValid;
+        });
+
+        $("input[maxlength]").maxlength();
+
+    });
+
+</script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var maxField = 50; //Input fields increment limitation
+        var addButton = $('.add_button'); //Add button selector
+        var wrapper = $('.field_wrapper'); //Input field wrapper
+        var fieldHTML = '<div class="row"><div class="col-md-11 pt-15" ><input type="text"  maxlength="30"  name="field_name[]" class="form-control stan-input custom_field_input_table" value=""/></div><div class="col-md-1 pt-10"><a href="javascript:void(0);" class="remove_button"><i class="fa fa-minus"></i></div><div>'; //New input field html 
+        var x = 1; //Initial field counter is 1
+
+        //Once add button is clicked
+        $(addButton).click(function () {
+            //Check maximum number of input fields
+
+            if (x < maxField) {
+                x++; //Increment field counter
+                $(wrapper).append(fieldHTML); //Add field html
+                $("input[maxlength]").maxlength();
+            }
+        });
+        //Once remove button is clicked
+        $(wrapper).on('click', '.remove_button', function (e) {
+            e.preventDefault();
+            console.log($(this).parent().parent('div').html())
+            $(this).parent().parent('div').remove(); //Remove field html
+            x--; //Decrement field counter
+        });
+    });
+
+    function clearmessage() {
+        $('#alert_success').hide()
+        $('#alert_error').hide()
+        $('#errormessage').html("")
+
+    }
+
+    function add_fields_configuration(inputData) {
+
+        $("#launch-idp").attr("disabled", true);
+        field_info = JSON.stringify(inputData)
+        $.ajax({
+            url: $("#SITEROOTURL").val() + '/add_fields_configuration/',
+
+            headers: { "X-CSRFToken": '{{ csrf_token }}', 'Content-Type': undefined },
+            type: "POST",
+            crossDomain: true,
+            dataType: "json",
+            data: { field_info },
+            success: function (result_output) {
+                console.log(result_output)
+
+                if (result_output.status == "1") {
+                    toastr.success(result_output.message)
+
+                    setTimeout(function () { location.reload(); }, 5000)
+                    // $('#alert_success').show()
+                    // $('#alert_error').hide()
+                    // $('#successmessage').html(result_output.message)
+                    //setTimeout(function(){ clearmessage()}, 9000); 
+                }
+                else {
+                    toastr.error(result_output.message)
+                    // $('#alert_success').hide()
+                    // $('#alert_error').show()
+                    // $('#errormessage').html(result_output.message)
+                    //setTimeout(function(){ clearmessage()}, 3000); 
+                }
+            },
+            error: function (error) {
+
+                console.log(error);
+            }
+        });
+    }
+
+</script>
+
+<script type="text/javascript">
+    
+    $('.sf_checked_all').on('change', function () {
+        $('.sf').prop('checked', $(this).prop("checked"));
+    });
+
+    $('.sf').change(function () { //".checkbox" change 
+       
+        if ($('.sf:checked').length == $('.sf').length) {
+            $('.sf_checked_all').prop('checked', true);
+        } else {
+            $('.sf_checked_all').prop('checked', false);
+        }
+    });
+
+
+
+    $('.tsf_checked_all').on('change', function () {
+        $('.tsf').prop('checked', $(this).prop("checked"));
+    });
+
+    $('.tsf').change(function () { //".checkbox" change 
+        if ($('.tsf:checked').length == $('.tsf').length) {
+            $('.tsf_checked_all').prop('checked', true);
+        } else {
+            $('.tsf_checked_all').prop('checked', false);
+        }
+    });
+</script>
+
+{% endblock %}

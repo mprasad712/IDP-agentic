@@ -1,0 +1,399 @@
+{% extends 'views/shared/base.html' %}
+{% load static %}
+{% block body_block %}
+
+<div class="row">
+
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-9">
+                        <h5 style="font-size: 20px;" class="mb-0"><img
+								src="{% static "assets/img/PwC_Funct_Icons_Confirmed_Outline_Black_RGB.png" %}"
+										class="caseImg">Validate Document</h5>
+                        <div id="head_file_name">Document name</div>
+                    </div>
+
+                    <div style="float: right;">
+                        
+                       <!-- <a href="{% url "download_audit_excel" %}" class="btn btn_pwc">Export Output</a>  -->
+
+                         <form name="updateuser" style="display: inline-block;" action="/download_audit_excel/"
+                        method="post">
+                        <input type="hidden" id="predicted_uuid" name="predicted_uuid" value="">
+
+                        {% csrf_token %}{% if next %}<input type="hidden" name="next" value="{{ next }}" />{% endif %}
+                        <button type="submit" id="btn_download"  style="display:block;float:right;margin-right:5px;"
+                            class="btn  btn_pwc float-right">
+                            <i class="glyphicon glyphicon-download-alt"></i> Export output</button>
+                    </form>
+                        
+                        </div>
+                    </div>
+                    
+                </div>
+
+            </div>
+            <div class="">
+                <div class="row">
+                   
+                    <div class="col-xl-4 col-lg-4 col-md-8 col-sm-12 col-12">
+                        <input id="original_file_name" , name= "original_file_name" style="display: none;">
+                        <div class="card-body" ID="form_fields" style="overflow-y: scroll;height: 801px;">
+    
+                        </div>
+                    </div>
+
+                    <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
+                        <div class="card-body mb_10" style="border: solid 1px #e5e5e5;min-height:800px;" id="invoice_display">
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- end data table  -->
+    <!-- ============================================================== -->
+
+<div class="row">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="card card-info">
+            <div class="card-header ">
+                <h3 class="card-title">Line Items</h3>
+                
+            </div>
+            <div class="card-body" ID="form_table_fields">
+                <div style="overflow-x: scroll;width: 100%;">
+                    <table class="table table-bordered table-hover dataTable" id="table_data" role="grid"
+                        aria-describedby="table_data_info">
+                        <thead id="table_heading">
+                        </thead>
+                        <tbody id="itemList" contenteditable="true">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var url_param = document.location.pathname.split("/");
+
+    var URL_ROOT = $('#SITEROOTURL').val()
+
+
+</script>
+ 
+<script>
+    $(document).ready(function () {
+        getFieldsInfo()
+        
+    });
+
+    function generate_standard_layout(standard_list) {
+
+        var formlayout = ""
+
+        for (var start = 0; start <= (standard_list.length - 1); start++) {
+            
+            key = standard_list[start]["field_key"]
+            keyval = standard_list[start]["fields_name"]
+            mapped_field = standard_list[start]["mapped_field"]
+            field_type = standard_list[start]["field_type"]
+            is_disable = ""
+             
+            if (key == "file_name") {
+                is_disable = "";
+
+            }
+            else {
+                is_disable = "";
+            }
+            var template_str = static_fields_template()
+            template_str = template_str.replace("$LABLEFOR$", key)
+            if (field_type == "S" || field_type == "T") {
+                template_str = template_str.replace("$ID$", key)
+                template_str = template_str.replace("$NAME$", key)
+                template_str = template_str.replace("$KEY_NAME$", key)
+
+               // template_str = template_str.replace("$CONF_ID$", "conf_" + key)
+               // template_str = template_str.replace("$CONF_NAME$", "conf_" + key)
+            }
+            else {
+                template_str = template_str.replace("$ID$", mapped_field)
+                template_str = template_str.replace("$KEY_NAME$", key)
+                template_str = template_str.replace("$NAME$", mapped_field)
+                //template_str = template_str.replace("$CONF_ID$", "conf_" + mapped_field)
+                //template_str = template_str.replace("$CONF_NAME$", "conf_" + mapped_field)
+            }
+            template_str = template_str.replace("$DISABLE$", is_disable)
+
+
+            if (keyval.toLowerCase() == "invoice date") {
+                template_str = template_str.replace("$LABEL$", uc_first("PO Date"))
+            }
+            if (keyval.toLowerCase() == "delivery address") {
+                template_str = template_str.replace("$LABEL$", uc_first("Ship to Address"))
+            }
+            else if (keyval.toLowerCase() == "bill to address") {
+                template_str = template_str.replace("$LABEL$", uc_first("Vendor Address"))
+            }
+            else if (keyval.toLowerCase() == "gst number") {
+                template_str = template_str.replace("$LABEL$", uc_first("Customer GST"))
+            }
+            else {
+                template_str = template_str.replace("$LABEL$", uc_first(keyval))
+            }
+            //template_str = template_str.replace("$PLACEHOLDER$", uc_first(keyval))
+            formlayout += template_str
+        }
+
+        return formlayout
+    }
+
+
+    function uc_first(input) {
+       
+        var result = ""
+        var words = input.split(' ');
+        
+        output = ""
+        for (var i = 0; i < words.length; i++) {
+                output = output + " " + words[i].substr(0, 1).toUpperCase() + words[i].substr(1);
+            }
+            result = output
+        return result
+    }
+
+    function static_fields_template() {
+        row_template = "<div class='form-group row'>"
+        row_template += "<label for='$LABLEFOR$' class='col-sm-4 col-form-label lbl' >$LABEL$</label>"
+        row_template += "<div class='col-sm-8'>"
+        row_template += "<input type='text' field_key = '$KEY_NAME$'  class='form-control frm_input' $DISABLE$ id='$ID$' name='$NAME$' >"
+        row_template += "</div>"
+        
+        row_template += "</div>"
+        return row_template
+    }
+
+    function generate_table_template(table_fields, addrow) {
+        table_header_row = ""
+        var header = ""
+        for (var tablerow_start = 0; tablerow_start <= (table_fields.length - 1); tablerow_start++) {
+            header_key = ''
+
+            if (table_fields[tablerow_start]["field_type"] == "T") {
+                header_key = table_fields[tablerow_start]["fields_name"].replace(' ', '_').toLowerCase()
+            }
+            else if (table_fields[tablerow_start]["field_type"] == "TC") {
+                header_key = table_fields[tablerow_start]["mapped_field"].replace(' ', '_').toLowerCase()
+            }
+            var header_row = "<th tabindex='0' class='sorting_asc' id='" + header_key + "' aria-controls='table_data' aria-label='Rendering engine: activate to sort column descending' aria-sort='ascending' rowspan='1' colspan='1'>" + uc_first(table_fields[tablerow_start]["fields_name"]) + "</th>"
+            header += header_row
+        }
+        if (addrow == true) {
+            table_header_row = "<tr role='row'>" + header + "</tr>"
+        }
+        else {
+            table_header_row = header
+        }
+
+        return table_header_row
+
+    }
+
+
+    function getFieldsInfo() {
+        
+        info = {}
+        info["UUID"] = url_param[2]
+        info["is_detail"] = "1"
+        info = JSON.stringify(info)
+        $.ajax({
+            url: URL_ROOT + '/extracted_fields_idp/',
+
+            headers: { "X-CSRFToken": '{{ csrf_token }}', 'Content-Type': undefined },
+            type: "POST",
+            crossDomain: true,
+            dataType: "json",
+            data: { info },
+            success: function (result_outputdata) {
+                data = result_outputdata["customfields"]
+                standard_form_open = '<form name="audit_form" id="audit_form" >  <input type="hidden" name="invoiceID" value="2">'
+                standard_form_close = '</form>'
+                standard_fields = generate_standard_layout(data["standard_list"])
+                standard_custom_fields = generate_standard_layout(data["standard_custom_list"])
+                layout = standard_form_open + standard_fields + standard_custom_fields + standard_form_open
+                $('#form_fields').append().html(layout)
+                table_standard_layout = generate_table_template(data["table_list"], "false")
+                table_custom_layout = generate_table_template(data["table_custom_list"], "true")
+                table_layout = table_standard_layout + table_custom_layout
+                 
+                $("#header_count").val(parseInt(data["table_list"].length) + parseInt(data["table_custom_list"].length))
+                console.log($("#header_count").val())
+                $('#table_heading').html(table_layout)
+                get_audited_details()
+            },
+            error: function (error) {
+
+                console.log(error);
+            }
+        });
+    }
+
+
+    function openFile(file) {
+        console.log("file name", file)
+                                var extension = file.substr( (file.lastIndexOf('.') +1) ).toLowerCase();
+                                return extension;
+                            } 
+
+
+    function get_audited_details() {
+        info = {}
+        info["UUID"] = url_param[2]
+        info = JSON.stringify(info)
+        $.ajax({
+            url: URL_ROOT + '/get_audited_data/',
+
+            headers: { "X-CSRFToken": '{{ csrf_token }}', 'Content-Type': undefined },
+            type: "POST",
+            crossDomain: true,
+            dataType: "json",
+            data: { info },
+            success: function (data) {
+                
+
+                standard_data_json = data["standard_data"][0]
+                console.log(standard_data_json, "arif_debug")
+                table_data_json = data["table_data"]
+                // Bind Standard Fields
+                seturl = "{% static "eips_data"  %}/invoice_data/" + standard_data_json["company_code"] + "/" + standard_data_json["config_uuid"] + "/" + standard_data_json["original_file_name"]
+
+                 var file_ext=openFile(standard_data_json["original_file_name"])
+                  if(file_ext == 'pdf'){
+                            
+                    $("#invoice_display").html("<embed id='invoice_path' src='"+ seturl +"' width='100%' height='800px' type='application/pdf'>" ); 
+                  } 
+
+                  if(file_ext=='jpg' || file_ext=='png'){
+                    $("#invoice_display").html("<img id='invoice_path' src='"+ seturl +"' width='100%' height='800px'>" ); 
+                  }          
+                
+
+                $.each(standard_data_json, function (key, val) {
+                    console.log(key)
+                    console.log("*************")
+                    field_value = ""
+                    if (val == null) {
+                        field_value = ""
+                    }
+                    else {
+                        field_value = val;
+
+                    }
+                    if(key == "uuid")
+                    {
+                        $("#predicted_uuid").val(field_value)
+                    }
+                    if (key == "file_name") {
+                        $("#head_file_name").html(field_value)
+                    }
+                    if (key.indexOf("conf_") != -1) {
+
+                        if (field_value != "") {
+                            $("#" + key).html(field_value)
+                            if (field_value < parseInt($("#conf_thresold").val())) {
+
+                                $("#" + key).attr("style", "background-color:#ff000059; color:#fff;width:43px !important;font-weight: 500;")
+                            }
+                            else {
+                                // $("#" + key).attr("style", "background-color:#329549c7; color:#fff;width:43px !important;")
+                                $("#" + key).attr("style", "background-color: ##1f793b; color: white; width: auto !important;font-weight: 500;")
+                            }
+                        }
+                        else {
+                            $("#" + key).html("N/A")
+                            $("#" + key).attr("style", "background-color:#ff000059; color:#fff;width:43px !important;")
+                        }
+
+                    }
+                    else {
+                        $("#" + key).val(field_value)
+                    }
+
+                });
+
+                invoice_amount = $( "input[field_key ='invoice_amount']" )
+                invoice_total = $( "input[field_key ='invoice_total']" )
+                
+                id_invoice_amount = $(invoice_amount).attr("id")
+                id_invoice_total = $(invoice_total).attr("id")
+
+              
+                if($("#"+id_invoice_total).val() != $("#"+id_invoice_amount).val() )
+                {                    
+                    $("#"+id_invoice_total).attr("style","background-color:#ff000059 !important;")
+                }
+                    console.log(table_data_json)
+                set_table_data(table_data_json)
+
+            },
+            error: function (error) {
+
+                console.log(error);
+            }
+        });
+    }
+
+    function set_table_data(table_fields) {
+
+        if (table_fields.length > 0) {
+            table_row = ""
+            for (row = 0; row < table_fields.length; row++) {
+                obj_table = table_fields[row];
+                column_val = ""
+                $.each(obj_table, function (key, val) {
+                    field_value = ""
+                    if (val == null) {
+                        field_value = ""
+                    }
+                    else {
+                        if(val.indexOf("$$") >=0)
+                        {
+                            field_value = val.replace("$$","");   
+                        }
+                        else if(val.indexOf("Remarks") >=0)
+                        {
+                            arr_remarks = val.split("Remarks"); 
+                            field_value=arr_remarks[0] 
+                        }
+                        else{ 
+                        field_value = val;
+                        }
+
+                    }   
+                    column_val = column_val + "<td  tabindex='0' class='sorting_asc'  aria-controls='table_data' aria-label='Rendering engine: activate to sort column descending' aria-sort='ascending' rowspan='1' colspan='1' style='color:#000;'>" + field_value + "</td>"
+
+                });
+                //column_val += '<td class="rmrow"  title="Delete Row" onclick="rowclose(' + row + ')"><div style="text-align:center" >&nbsp;</div></td>'
+                table_row += "<tr id= 'tbl" + row + "'  role='row'>" + column_val + "</tr>"
+
+            }  
+           
+            $('#itemList').html(table_row)
+        }
+        else {
+            $("#table_section").hide();
+        }
+
+    }
+ </script>
+{% endblock %}

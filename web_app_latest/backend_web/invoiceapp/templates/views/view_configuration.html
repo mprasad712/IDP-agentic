@@ -1,0 +1,271 @@
+{% extends 'views/shared/base.html' %}
+{% load static %}
+{% block body_block %}
+
+{% if config_list %}
+
+<style>
+    h1::first-letter, h5::first-letter { text-transform: uppercase; }
+</style>
+
+<div class="col-md-12">
+
+	<div class="card dash-card">
+									<div class="card-header" style="padding-bottom: 0px;">
+                                        <div class="row">
+                    <div class="col-md-12">
+                        <h5 style="font-size: 20px;" class="mb-0"><img
+										src="{% static "assets/img/PwC_Funct_Icons_ListView_Outline_Black_RGB.png" %}"
+										class="caseImg">&nbsp;Configration(s) list</h5>
+                            <p>List of configuration which is created by the system</p>
+                    </div>
+
+                </div>
+									</div>
+	<div class="card-body">
+      <div style="margin-top:10px;">
+          <div class="row">
+
+              <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 col-12">
+
+                  <div class="card">
+                      <div style="padding: 15px 10px 15px 20px;background-color: #d5d5d5">
+                          <h4 class="card-title" style="color:#000;line-height: 24px;font-weight: 500;">Select configuration</h4>
+                          
+                      </div>
+                      <ul class="list-group list-group-flush">
+                          {% for item in config_list %}
+                          {% if item.config_name != "Gen AI Config" %}
+                          <li class="list-group-item" style="padding: 6px !important;text-transform: Capitalize;}"><a id="lnk_{{item.config_uuid}}" class="nav-link {% if forloop.counter == 1 %} active {% endif %}"
+                            id="vert-tabs-home-tab {% if forloop.counter == 1 %} active {% endif %}" data-toggle="pill"
+                            href="#h_{{forloop.counter}}"  role="tab"
+                            aria-controls="vert-tabs-h_{{forloop.counter}}" aria-selected="true">{{item.config_name}}</a></li>
+                          {% endif %}
+              
+                          {% endfor%}
+                           
+                      </ul>
+                       
+                  </div>
+               
+              </div>
+              <div class="col-xl-9 col-lg-9  col-md-9 col-sm-12 col-12">
+          
+                <div class="tab-content" id="vert-tabs-tabContent">
+                  {% for items in config_list %}
+                  <div class="tab-pane text-left fade {% if forloop.counter == 1 %} active show {% endif %}"
+                    id="h_{{forloop.counter}}" role="tabpanel" aria-labelledby="vert-tabs-h_{{forloop.counter}}-tab">
+                    <div  style="margin-left:5px;background-color: #d5d5d5">
+                      <div class="row">
+                        <div class="col-6">
+                          <h5 class="heading" style="margin:15px 0px 15px 15px;color:#000;font-weight: 500;text-transform: capitalize;font-size:16px;">{{items.config_name}}  
+                          </h5>
+                        </div>
+                        <div class="col-6">
+                        {% if request.session.is_local_admin == 1 %}
+                          <button type="button" data-toggle="modal" data-target="#model-{{items.config_uuid}}"
+                            id="delete_config" class="btn btn_pwc"
+                            style="margin-top: 3px;margin:8px 0px;float:right;">Delete Configuration</button>
+                          {% endif %}  
+                        </div>
+          
+                        <div class="modal fade" id="model-{{items.config_uuid}}" style="display: none;" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h4 class="modal-title">Alert</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">×</span>
+                                </button>
+                              </div>
+                              <div class="modal-body" style="padding:25px;margin:50px;background: #da0419;color:#ffffff">
+                                <p>Are you sure you want to Delete <b>{{items.config_name}}</b> configuration.</p>
+                                <span>Note : if you delete configuration it will delete all data related to the
+                                  configuration.</span>
+                              </div>
+                              <div class="modal-footer justify-content-between">
+                                <button type="button" class="btn btn-outline-light" data-dismiss="modal" style="background: #474747;color:#ffffff">Close</button>
+                                <button type="button" class="btn btn-danger"
+                                  onclick="delete_fields_configuration('{{items.config_uuid}}','h_{{forloop.counter}}')">Delete</button>
+                              </div>
+                            </div>
+                            <!-- /.modal-content -->
+                          </div>
+                          <!-- /.modal-dialog -->
+                        </div>
+                      </div>
+          
+          
+                    </div>
+                    
+                    <div class="row" style="padding: 6px !important">
+                      <div class="col-12">
+                        <div class="card">
+                          <div class="card-header d-flex" style="padding: 10px 10px .25rem .80rem;">
+                            <h4 class="card-title" style="line-height: 24px;font-weight: 600;">Standard fields</h4>
+                            <span class="right badge badge-warning" style="margin-left: 11px;font-size: 16px;height: 22px;">{{items.config_data.standard_list |length}}</span>
+                    
+                          
+                          </div>
+                          <!-- /.card-header -->
+                          <div class="card-body p-0">
+          
+                              {% for sl in items.config_data.standard_list %}
+                              <div style=" float: left;border:solid 1px #ababab; margin:10px 5px 10px 10px;margin-bottom: 10px;"> 
+                                 <span class="nav-link"  >
+                                {{ sl.fields_name|capfirst }}
+                              </span></div>
+                              {% endfor%}
+                            
+                          </div>
+                    
+                        </div>
+                      </div>
+                    
+                      <div class="col-12">
+                        <div class="card">
+          
+                            
+                            <div class="card-header d-flex" style="padding: 10px 10px .25rem .80rem;">
+                                <h4 class="card-title" style="line-height: 24px;font-weight: 600;">Standard custom fields</h4>
+                                <span class="right badge badge-warning" style="margin-left: 11px;font-size: 16px;height: 22px;">{{items.config_data.standard_custom_list |length}}</span>
+                        
+                              
+                              </div>
+                          <!-- /.card-header -->
+                          <div class="card-body p-0">
+                            
+                              {% for sl in items.config_data.standard_custom_list %}
+                              <div style=" float: left;border:solid 1px #ababab; margin:10px 5px 10px 10px;margin-bottom: 10px;"> 
+                                  <span class="nav-link"  >
+                                 {{ sl.fields_name|capfirst }}
+                               </span></div>
+                              {% endfor%}
+                    
+                              <!-- /.item -->
+                    
+                              <!-- /.item -->
+                            </ul>
+                          </div>
+                    
+                        </div>
+                      </div>
+                    
+                      <div class="col-12">
+                        <div class="card">
+                          <div class="card-header d-flex"style="padding: 10px 10px .25rem .80rem;">
+                            <h4 class="card-title" style="line-height: 24px;font-weight: 600;">Line item</h4>
+                            <span class="right badge badge-warning"
+                              style="margin-left: 11px;font-size: 17px;height:22px ;">{{items.config_data.table_list |length}}</span>
+                    
+                            
+                          </div>
+                          <!-- /.card-header -->
+                          <div class="card-body p-0">
+                           
+                              {% for sl in items.config_data.table_list %}
+                              <div style=" float: left;border:solid 1px #ababab;margin:10px 5px 10px 10px;margin-bottom: 10px;"> 
+                                  <span class="nav-link"  >
+                                 {{ sl.fields_name|capfirst }}
+                               </span></div>
+                              {% endfor%}
+                    
+                            
+                          </div>
+                    
+                        </div>
+                      </div>
+                    
+                    
+                      <div class="col-12">
+                        <div class="card">
+                          <div class="card-header d-flex" style="padding: 10px 10px .25rem .80rem;">
+                            <h4 class="card-title" style="line-height: 24px;font-weight: 600;">Line item custom</h4>
+                            <span class="right badge badge-warning"
+                              style="margin-left: 11px;font-size: 17px; height: 22px;">{{items.config_data.table_custom_list |length}}</span>
+                     
+                          </div>
+                          <!-- /.card-header -->
+                          <div class="card-body p-0">
+                           
+                              {% for sl in items.config_data.table_custom_list %}
+                              <div style=" float: left;border:solid 1px #ababab; margin:10px 5px 10px 10px;margin-bottom: 10px;"> 
+                                  <span class="nav-link"  >
+                                 {{ sl.fields_name|capfirst }}
+                               </span></div>
+                              {% endfor%}
+                    
+                              
+                          </div>
+                    
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                  {% endfor%}
+          
+                </div>
+              </div>
+            </div>
+          {% else %}
+          <div class="row">
+              <div class="col-12">
+                <div style="font-size: 22px;padding: 40px;margin: 0px auto;margin-top: 0px;text-align: center;margin-top: 100px;color:#ababab;}">
+                Field configuration doesn't exist. Please add Configuration
+                </div>
+              </div>
+            </div>
+          {% endif%}
+          
+          
+      </div>
+    </div>
+  </div>
+  <!-- ============================================================== -->
+  <!-- end data table  -->
+  <!-- ============================================================== -->
+</div>
+
+
+
+
+
+<script>
+
+  function delete_fields_configuration(uuid, tab_id) {
+    inputData = {}
+    inputData["config_uuid"] = uuid
+   // loading()
+    field_info = JSON.stringify(inputData)
+    $.ajax({
+      url: $("#SITEROOTURL").val()+'/delete_field_config/',
+
+      headers: { "X-CSRFToken": '{{ csrf_token }}', 'Content-Type': undefined },
+      type: "POST",
+      crossDomain: true,
+      dataType: "json",
+      data: { field_info },
+      success: function (result_output) {
+        console.log(result_output)
+       
+        if (result_output.status == "1") {
+          toastr.success(result_output.message)
+          unloading()
+          location.reload(true)
+        }
+        else {
+          // toastr.error(result_output.message)
+          toastr.success("Configration deleted successfully.")
+          unloading()
+          location.reload(true)
+        }
+      },
+      error: function (error) {
+        unloading()
+        console.log(error);
+      }
+    });
+  }
+</script>
+
+{% endblock %}

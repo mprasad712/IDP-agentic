@@ -1,0 +1,27 @@
+Provide the details in the data JSON format from the following invoice text, regardless of the vendor's layout or format.
+    Capture line item information accurately. Don't extract extra rows.
+    
+    Here is a description of all the line items mentioned below:
+
+    {line_prompt}
+
+    Note - Only include the details mentioned in the JSON format. Key and value should be in double qoutes Do not include any other information.
+    
+    If you don't find a matching item in the invoice text, leave it as a blank or empty string.
+    
+    Invoice:
+    
+    {invoice_text}
+    
+    Provide the details in the following expected JSON format only. Do not add any extra key-value pairs in your response.
+    All value should be in string format only.
+   
+    
+    {json_data}
+
+    If there is no data for the line items in the invoice then give the json_data as default response. Do not just give me blank line items with no keys.
+
+    Do not give None in value is not found give as blank string.
+    NOTE: Do not return None , instead replace it with '' empty string.
+
+    Note: Your answer should only contain the JSON - no markdown formatting or extra text in the response.
